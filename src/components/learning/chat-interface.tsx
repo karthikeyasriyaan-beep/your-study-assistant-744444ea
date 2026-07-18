@@ -1,5 +1,6 @@
 import React, { useMemo, useState, useEffect, useRef } from "react";
 import { UIMessage } from "ai";
+import ReactMarkdown from "react-markdown";
 import { 
   Send, 
   Bot, 
@@ -628,13 +629,14 @@ export function ChatInterface({ notebook }: ChatInterfaceProps) {
                       </div>
                     )}
                     <div
-                      className={`max-w-[85%] whitespace-pre-wrap rounded-lg px-5 py-3.5 text-xs sm:text-sm leading-relaxed transition-all duration-300 ${
+                      className={`max-w-[85%] rounded-lg px-5 py-3.5 text-xs sm:text-sm leading-relaxed transition-all duration-300 ${
                         isUser
-                          ? "bg-white text-black font-medium shadow-md font-sans rounded-tr-none"
-                          : "bg-white/[0.02] border border-white/[0.06] text-zinc-200 rounded-tl-none font-sans"
+                          ? "bg-white text-black font-medium shadow-md font-sans rounded-tr-none whitespace-pre-wrap"
+                          : "bg-white/[0.02] border border-white/[0.06] text-zinc-200 rounded-tl-none font-sans prose prose-invert prose-sm max-w-none prose-p:my-2 prose-headings:my-3 prose-pre:bg-black/40 prose-code:text-primary"
                       }`}
-                      dangerouslySetInnerHTML={{ __html: textContent }}
-                    />
+                    >
+                      {isUser ? textContent : <ReactMarkdown>{textContent}</ReactMarkdown>}
+                    </div>
                     {isUser && (
                       <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded bg-zinc-900 border border-white/5 text-zinc-400">
                         <User className="h-4 w-4 stroke-[1.5]" />
