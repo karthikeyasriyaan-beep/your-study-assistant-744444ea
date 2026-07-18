@@ -1,6 +1,11 @@
 import React, { useMemo, useState, useEffect, useRef } from "react";
 import { UIMessage } from "ai";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
+import rehypeRaw from "rehype-raw";
+import "katex/dist/katex.min.css";
 import { 
   Send, 
   Bot, 
@@ -635,7 +640,14 @@ export function ChatInterface({ notebook }: ChatInterfaceProps) {
                           : "bg-white/[0.02] border border-white/[0.06] text-zinc-200 rounded-tl-none font-sans prose prose-invert prose-sm max-w-none prose-p:my-2 prose-headings:my-3 prose-pre:bg-black/40 prose-code:text-primary"
                       }`}
                     >
-                      {isUser ? textContent : <ReactMarkdown>{textContent}</ReactMarkdown>}
+                      {isUser ? textContent : (
+                        <ReactMarkdown
+                          remarkPlugins={[remarkGfm, remarkMath]}
+                          rehypePlugins={[rehypeRaw, rehypeKatex]}
+                        >
+                          {textContent}
+                        </ReactMarkdown>
+                      )}
                     </div>
                     {isUser && (
                       <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded bg-zinc-900 border border-white/5 text-zinc-400">
