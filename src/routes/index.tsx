@@ -1,24 +1,42 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { ChatInterface } from "@/components/learning/chat-interface";
+import { loadNotebook, newNotebook, type Notebook } from "@/lib/storage";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "Intelligent Learning — AI Notebook Tutor" },
+      {
+        name: "description",
+        content:
+          "Chat with an AI study tutor. Attach a notebook photo, get formulas, concepts, flashcards, quiz — and Socratic hints, never direct answers.",
+      },
+      { property: "og:title", content: "Intelligent Learning" },
+      {
+        property: "og:description",
+        content:
+          "Hinglish-friendly AI tutor. Hints only, never solutions. Scans auto-generate flashcards & quizzes.",
+      },
+    ],
+  }),
   component: Index,
+  ssr: false,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
-  return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
-  );
+  const [nb, setNb] = useState<Notebook | null>(null);
+
+  useEffect(() => {
+    let existing = loadNotebook();
+    if (!existing) {
+      existing = newNotebook();
+    }
+    setNb(existing);
+  }, []);
+
+  if (!nb) {
+    return <div className="p-8 text-sm text-muted-foreground">Loading…</div>;
+  }
+  return <ChatInterface notebook={nb} />;
 }

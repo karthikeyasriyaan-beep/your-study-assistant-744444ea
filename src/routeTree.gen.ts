@@ -9,38 +9,261 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WelcomeRouteImport } from './routes/welcome'
+import { Route as ProductivityRouteImport } from './routes/productivity'
+import { Route as MaterialsRouteImport } from './routes/materials'
+import { Route as ManagementRouteImport } from './routes/management'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as MaterialsIndexRouteImport } from './routes/materials.index'
+import { Route as ProductivityQuizRouteImport } from './routes/productivity.quiz'
+import { Route as ProductivityFlashcardsRouteImport } from './routes/productivity.flashcards'
+import { Route as MaterialsInterMpcRouteImport } from './routes/materials.inter-mpc'
+import { Route as MaterialsInterBipcRouteImport } from './routes/materials.inter-bipc'
+import { Route as MaterialsChapterIdRouteImport } from './routes/materials.$chapterId'
+import { Route as ManagementTimerRouteImport } from './routes/management.timer'
+import { Route as ManagementPlannerRouteImport } from './routes/management.planner'
+import { Route as ManagementAnalyticsRouteImport } from './routes/management.analytics'
+import { Route as ApiChatRouteImport } from './routes/api/chat'
 
+const WelcomeRoute = WelcomeRouteImport.update({
+  id: '/welcome',
+  path: '/welcome',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProductivityRoute = ProductivityRouteImport.update({
+  id: '/productivity',
+  path: '/productivity',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MaterialsRoute = MaterialsRouteImport.update({
+  id: '/materials',
+  path: '/materials',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ManagementRoute = ManagementRouteImport.update({
+  id: '/management',
+  path: '/management',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MaterialsIndexRoute = MaterialsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MaterialsRoute,
+} as any)
+const ProductivityQuizRoute = ProductivityQuizRouteImport.update({
+  id: '/quiz',
+  path: '/quiz',
+  getParentRoute: () => ProductivityRoute,
+} as any)
+const ProductivityFlashcardsRoute = ProductivityFlashcardsRouteImport.update({
+  id: '/flashcards',
+  path: '/flashcards',
+  getParentRoute: () => ProductivityRoute,
+} as any)
+const MaterialsInterMpcRoute = MaterialsInterMpcRouteImport.update({
+  id: '/inter-mpc',
+  path: '/inter-mpc',
+  getParentRoute: () => MaterialsRoute,
+} as any)
+const MaterialsInterBipcRoute = MaterialsInterBipcRouteImport.update({
+  id: '/inter-bipc',
+  path: '/inter-bipc',
+  getParentRoute: () => MaterialsRoute,
+} as any)
+const MaterialsChapterIdRoute = MaterialsChapterIdRouteImport.update({
+  id: '/$chapterId',
+  path: '/$chapterId',
+  getParentRoute: () => MaterialsRoute,
+} as any)
+const ManagementTimerRoute = ManagementTimerRouteImport.update({
+  id: '/timer',
+  path: '/timer',
+  getParentRoute: () => ManagementRoute,
+} as any)
+const ManagementPlannerRoute = ManagementPlannerRouteImport.update({
+  id: '/planner',
+  path: '/planner',
+  getParentRoute: () => ManagementRoute,
+} as any)
+const ManagementAnalyticsRoute = ManagementAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => ManagementRoute,
+} as any)
+const ApiChatRoute = ApiChatRouteImport.update({
+  id: '/api/chat',
+  path: '/api/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/dashboard': typeof DashboardRoute
+  '/management': typeof ManagementRouteWithChildren
+  '/materials': typeof MaterialsRouteWithChildren
+  '/productivity': typeof ProductivityRouteWithChildren
+  '/welcome': typeof WelcomeRoute
+  '/api/chat': typeof ApiChatRoute
+  '/management/analytics': typeof ManagementAnalyticsRoute
+  '/management/planner': typeof ManagementPlannerRoute
+  '/management/timer': typeof ManagementTimerRoute
+  '/materials/$chapterId': typeof MaterialsChapterIdRoute
+  '/materials/inter-bipc': typeof MaterialsInterBipcRoute
+  '/materials/inter-mpc': typeof MaterialsInterMpcRoute
+  '/productivity/flashcards': typeof ProductivityFlashcardsRoute
+  '/productivity/quiz': typeof ProductivityQuizRoute
+  '/materials/': typeof MaterialsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/dashboard': typeof DashboardRoute
+  '/management': typeof ManagementRouteWithChildren
+  '/productivity': typeof ProductivityRouteWithChildren
+  '/welcome': typeof WelcomeRoute
+  '/api/chat': typeof ApiChatRoute
+  '/management/analytics': typeof ManagementAnalyticsRoute
+  '/management/planner': typeof ManagementPlannerRoute
+  '/management/timer': typeof ManagementTimerRoute
+  '/materials/$chapterId': typeof MaterialsChapterIdRoute
+  '/materials/inter-bipc': typeof MaterialsInterBipcRoute
+  '/materials/inter-mpc': typeof MaterialsInterMpcRoute
+  '/productivity/flashcards': typeof ProductivityFlashcardsRoute
+  '/productivity/quiz': typeof ProductivityQuizRoute
+  '/materials': typeof MaterialsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/dashboard': typeof DashboardRoute
+  '/management': typeof ManagementRouteWithChildren
+  '/materials': typeof MaterialsRouteWithChildren
+  '/productivity': typeof ProductivityRouteWithChildren
+  '/welcome': typeof WelcomeRoute
+  '/api/chat': typeof ApiChatRoute
+  '/management/analytics': typeof ManagementAnalyticsRoute
+  '/management/planner': typeof ManagementPlannerRoute
+  '/management/timer': typeof ManagementTimerRoute
+  '/materials/$chapterId': typeof MaterialsChapterIdRoute
+  '/materials/inter-bipc': typeof MaterialsInterBipcRoute
+  '/materials/inter-mpc': typeof MaterialsInterMpcRoute
+  '/productivity/flashcards': typeof ProductivityFlashcardsRoute
+  '/productivity/quiz': typeof ProductivityQuizRoute
+  '/materials/': typeof MaterialsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/dashboard'
+    | '/management'
+    | '/materials'
+    | '/productivity'
+    | '/welcome'
+    | '/api/chat'
+    | '/management/analytics'
+    | '/management/planner'
+    | '/management/timer'
+    | '/materials/$chapterId'
+    | '/materials/inter-bipc'
+    | '/materials/inter-mpc'
+    | '/productivity/flashcards'
+    | '/productivity/quiz'
+    | '/materials/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/dashboard'
+    | '/management'
+    | '/productivity'
+    | '/welcome'
+    | '/api/chat'
+    | '/management/analytics'
+    | '/management/planner'
+    | '/management/timer'
+    | '/materials/$chapterId'
+    | '/materials/inter-bipc'
+    | '/materials/inter-mpc'
+    | '/productivity/flashcards'
+    | '/productivity/quiz'
+    | '/materials'
+  id:
+    | '__root__'
+    | '/'
+    | '/dashboard'
+    | '/management'
+    | '/materials'
+    | '/productivity'
+    | '/welcome'
+    | '/api/chat'
+    | '/management/analytics'
+    | '/management/planner'
+    | '/management/timer'
+    | '/materials/$chapterId'
+    | '/materials/inter-bipc'
+    | '/materials/inter-mpc'
+    | '/productivity/flashcards'
+    | '/productivity/quiz'
+    | '/materials/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DashboardRoute: typeof DashboardRoute
+  ManagementRoute: typeof ManagementRouteWithChildren
+  MaterialsRoute: typeof MaterialsRouteWithChildren
+  ProductivityRoute: typeof ProductivityRouteWithChildren
+  WelcomeRoute: typeof WelcomeRoute
+  ApiChatRoute: typeof ApiChatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/welcome': {
+      id: '/welcome'
+      path: '/welcome'
+      fullPath: '/welcome'
+      preLoaderRoute: typeof WelcomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/productivity': {
+      id: '/productivity'
+      path: '/productivity'
+      fullPath: '/productivity'
+      preLoaderRoute: typeof ProductivityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/materials': {
+      id: '/materials'
+      path: '/materials'
+      fullPath: '/materials'
+      preLoaderRoute: typeof MaterialsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/management': {
+      id: '/management'
+      path: '/management'
+      fullPath: '/management'
+      preLoaderRoute: typeof ManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +271,136 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/materials/': {
+      id: '/materials/'
+      path: '/'
+      fullPath: '/materials/'
+      preLoaderRoute: typeof MaterialsIndexRouteImport
+      parentRoute: typeof MaterialsRoute
+    }
+    '/productivity/quiz': {
+      id: '/productivity/quiz'
+      path: '/quiz'
+      fullPath: '/productivity/quiz'
+      preLoaderRoute: typeof ProductivityQuizRouteImport
+      parentRoute: typeof ProductivityRoute
+    }
+    '/productivity/flashcards': {
+      id: '/productivity/flashcards'
+      path: '/flashcards'
+      fullPath: '/productivity/flashcards'
+      preLoaderRoute: typeof ProductivityFlashcardsRouteImport
+      parentRoute: typeof ProductivityRoute
+    }
+    '/materials/inter-mpc': {
+      id: '/materials/inter-mpc'
+      path: '/inter-mpc'
+      fullPath: '/materials/inter-mpc'
+      preLoaderRoute: typeof MaterialsInterMpcRouteImport
+      parentRoute: typeof MaterialsRoute
+    }
+    '/materials/inter-bipc': {
+      id: '/materials/inter-bipc'
+      path: '/inter-bipc'
+      fullPath: '/materials/inter-bipc'
+      preLoaderRoute: typeof MaterialsInterBipcRouteImport
+      parentRoute: typeof MaterialsRoute
+    }
+    '/materials/$chapterId': {
+      id: '/materials/$chapterId'
+      path: '/$chapterId'
+      fullPath: '/materials/$chapterId'
+      preLoaderRoute: typeof MaterialsChapterIdRouteImport
+      parentRoute: typeof MaterialsRoute
+    }
+    '/management/timer': {
+      id: '/management/timer'
+      path: '/timer'
+      fullPath: '/management/timer'
+      preLoaderRoute: typeof ManagementTimerRouteImport
+      parentRoute: typeof ManagementRoute
+    }
+    '/management/planner': {
+      id: '/management/planner'
+      path: '/planner'
+      fullPath: '/management/planner'
+      preLoaderRoute: typeof ManagementPlannerRouteImport
+      parentRoute: typeof ManagementRoute
+    }
+    '/management/analytics': {
+      id: '/management/analytics'
+      path: '/analytics'
+      fullPath: '/management/analytics'
+      preLoaderRoute: typeof ManagementAnalyticsRouteImport
+      parentRoute: typeof ManagementRoute
+    }
+    '/api/chat': {
+      id: '/api/chat'
+      path: '/api/chat'
+      fullPath: '/api/chat'
+      preLoaderRoute: typeof ApiChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
+interface ManagementRouteChildren {
+  ManagementAnalyticsRoute: typeof ManagementAnalyticsRoute
+  ManagementPlannerRoute: typeof ManagementPlannerRoute
+  ManagementTimerRoute: typeof ManagementTimerRoute
+}
+
+const ManagementRouteChildren: ManagementRouteChildren = {
+  ManagementAnalyticsRoute: ManagementAnalyticsRoute,
+  ManagementPlannerRoute: ManagementPlannerRoute,
+  ManagementTimerRoute: ManagementTimerRoute,
+}
+
+const ManagementRouteWithChildren = ManagementRoute._addFileChildren(
+  ManagementRouteChildren,
+)
+
+interface MaterialsRouteChildren {
+  MaterialsChapterIdRoute: typeof MaterialsChapterIdRoute
+  MaterialsInterBipcRoute: typeof MaterialsInterBipcRoute
+  MaterialsInterMpcRoute: typeof MaterialsInterMpcRoute
+  MaterialsIndexRoute: typeof MaterialsIndexRoute
+}
+
+const MaterialsRouteChildren: MaterialsRouteChildren = {
+  MaterialsChapterIdRoute: MaterialsChapterIdRoute,
+  MaterialsInterBipcRoute: MaterialsInterBipcRoute,
+  MaterialsInterMpcRoute: MaterialsInterMpcRoute,
+  MaterialsIndexRoute: MaterialsIndexRoute,
+}
+
+const MaterialsRouteWithChildren = MaterialsRoute._addFileChildren(
+  MaterialsRouteChildren,
+)
+
+interface ProductivityRouteChildren {
+  ProductivityFlashcardsRoute: typeof ProductivityFlashcardsRoute
+  ProductivityQuizRoute: typeof ProductivityQuizRoute
+}
+
+const ProductivityRouteChildren: ProductivityRouteChildren = {
+  ProductivityFlashcardsRoute: ProductivityFlashcardsRoute,
+  ProductivityQuizRoute: ProductivityQuizRoute,
+}
+
+const ProductivityRouteWithChildren = ProductivityRoute._addFileChildren(
+  ProductivityRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DashboardRoute: DashboardRoute,
+  ManagementRoute: ManagementRouteWithChildren,
+  MaterialsRoute: MaterialsRouteWithChildren,
+  ProductivityRoute: ProductivityRouteWithChildren,
+  WelcomeRoute: WelcomeRoute,
+  ApiChatRoute: ApiChatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
