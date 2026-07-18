@@ -124,9 +124,9 @@ export const generateSummary = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => SummaryInput.parse(input))
   .handler(async ({ data }) => {
     const gateway = createLovableAiGatewayProvider(getLovableApiKey());
-    const { experimental_output } = await generateText({
+    const { output: experimental_output } = await generateText({
       model: gateway("google/gemini-2.5-flash"),
-      experimental_output: Output.object({ schema: SummarySchema }),
+      output: Output.object({ schema: SummarySchema }),
       prompt: `You are a study-material analyzer for Indian school/college students. The text below was OCR-extracted from a student's handwritten notebook and may contain Hindi/English/Hinglish and rough math notation.
 
 Extract:
@@ -155,9 +155,9 @@ export const generateAssessment = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => AssessmentInput.parse(input))
   .handler(async ({ data }) => {
     const gateway = createLovableAiGatewayProvider(getLovableApiKey());
-    const { experimental_output } = await generateText({
+    const { output: experimental_output } = await generateText({
       model: gateway("google/gemini-2.5-flash"),
-      experimental_output: Output.object({ schema: AssessmentSchema }),
+      output: Output.object({ schema: AssessmentSchema }),
       prompt: `Build a study assessment from this notebook material.
 
 Topic: ${data.summary.topicTags.subject} — ${data.summary.topicTags.chapter} (${data.summary.topicTags.class})
