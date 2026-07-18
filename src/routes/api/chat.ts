@@ -53,9 +53,7 @@ export const Route = createFileRoute("/api/chat")({
             messages: await convertToModelMessages(body.messages as UIMessage[]),
           });
 
-          return result.toUIMessageStreamResponse({
-            originalMessages: body.messages as UIMessage[],
-          });
+          return result.toTextStreamResponse();
         } catch (err) {
           console.error("chat error", err);
           const msg = err instanceof Error ? err.message : "chat failed";
