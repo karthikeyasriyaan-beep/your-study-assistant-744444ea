@@ -518,7 +518,7 @@ export function ChatInterface({ notebook }: ChatInterfaceProps) {
         {/* --- Unified Interactive Conversation Console --- */}
         <div 
           ref={scrollRef}
-          className="flex-1 overflow-y-auto rounded-xl border border-white/5 p-6 space-y-6 bg-black/40 backdrop-blur-md relative shadow-2xl shadow-black/80 custom-scrollbar"
+          className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 relative custom-scrollbar"
         >
           {/* Active Exam Lock Warning */}
           {isTestLocked && (
@@ -696,7 +696,7 @@ export function ChatInterface({ notebook }: ChatInterfaceProps) {
             </div>
           )}
 
-          <div className="relative flex items-center bg-[#09090b]/90 border border-white/10 rounded-lg focus-within:border-white/30 transition-all duration-500 p-2 shadow-2xl shadow-black/95">
+          <div className="relative flex items-center gap-2 bg-white/[0.06] border border-white/10 rounded-full focus-within:border-white/25 transition-all duration-300 pl-2 pr-2 py-1.5 shadow-lg shadow-black/40">
             <input
               ref={fileInputRef}
               type="file"
@@ -710,7 +710,7 @@ export function ChatInterface({ notebook }: ChatInterfaceProps) {
               onClick={() => fileInputRef.current?.click()}
               disabled={busy || isTestLocked || isExtractingImage}
               title="Attach notebook image"
-              className="grid h-9 w-9 shrink-0 place-items-center rounded bg-white/[0.04] border border-white/10 text-zinc-300 hover:text-white hover:bg-white/[0.08] transition disabled:opacity-40"
+              className="grid h-9 w-9 shrink-0 place-items-center rounded-full text-zinc-300 hover:text-white hover:bg-white/[0.08] transition disabled:opacity-40"
             >
               {isExtractingImage ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -725,26 +725,19 @@ export function ChatInterface({ notebook }: ChatInterfaceProps) {
               placeholder={
                 isTestLocked
                   ? t("tutor.placeholder.locked")
-                  : t("tutor.placeholder")
+                  : "Ask Trackora"
               }
               disabled={busy || isTestLocked}
-              className="bg-transparent border-none text-xs sm:text-sm text-white focus-visible:ring-0 shadow-none px-3 flex-1 h-10 placeholder-zinc-600 font-sans tracking-wide"
+              className="bg-transparent border-none text-sm text-white focus-visible:ring-0 shadow-none px-2 flex-1 h-10 placeholder-zinc-500 font-sans"
             />
             
-            <div className="flex items-center gap-2 pr-2">
-              {input.trim() && !busy && (
-                <span className="hidden sm:inline text-[9px] font-mono text-zinc-600 tracking-wider">
-                  PRESS ENTER <CornerDownLeft className="h-2.5 w-2.5 inline ml-0.5" />
-                </span>
-              )}
-              <Button 
-                type="submit" 
-                disabled={busy || isTestLocked || (!input.trim() && attachedImages.length === 0)}
-                className="rounded h-9 px-4 bg-primary hover:bg-primary/90 text-primary-foreground flex items-center justify-center shrink-0 transition-transform active:scale-95"
-              >
-                <Send className="h-4 w-4" />
-              </Button>
-            </div>
+            <Button 
+              type="submit" 
+              disabled={busy || isTestLocked || (!input.trim() && attachedImages.length === 0)}
+              className="rounded-full h-9 w-9 p-0 bg-primary hover:bg-primary/90 text-primary-foreground grid place-items-center shrink-0 transition-transform active:scale-95 disabled:opacity-40"
+            >
+              <Send className="h-4 w-4" />
+            </Button>
           </div>
         </form>
       </main>
