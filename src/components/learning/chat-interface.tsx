@@ -518,7 +518,7 @@ export function ChatInterface({ notebook }: ChatInterfaceProps) {
         {/* --- Unified Interactive Conversation Console --- */}
         <div 
           ref={scrollRef}
-          className="flex-1 overflow-y-auto rounded-xl border border-white/5 p-6 space-y-6 bg-black/40 backdrop-blur-md relative shadow-2xl shadow-black/80 custom-scrollbar"
+          className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 relative custom-scrollbar"
         >
           {/* Active Exam Lock Warning */}
           {isTestLocked && (
@@ -607,14 +607,17 @@ export function ChatInterface({ notebook }: ChatInterfaceProps) {
 
           {/* Chat Messages */}
           {messages.length === 0 && practiceQuestions.length === 0 ? (
-            <div className="flex h-full flex-col items-center justify-center text-center space-y-5 py-24">
-              <div className="grid h-14 w-14 place-items-center rounded-2xl bg-primary/10 border border-primary/20 text-primary shadow-lg shadow-primary/10">
-                <Bot className="h-6 w-6 stroke-[1.5]" />
-              </div>
-              <div className="space-y-2">
-                <p className="font-display text-2xl text-foreground text-balance">{t("tutor.ready")}</p>
-                <p className="max-w-sm font-ui text-xs uppercase tracking-[0.25em] text-muted-foreground">
-                  {t("tutor.readyDesc")}
+            <div className="flex h-full flex-col items-center justify-center text-center space-y-6 py-24">
+              <div
+                aria-hidden
+                className="h-16 w-16 rounded-[14px] rotate-45 bg-[conic-gradient(from_180deg,#4285F4,#9B72CB,#D96570,#F5B33C,#4285F4)] shadow-[0_0_60px_-10px_rgba(155,114,203,0.6)]"
+              />
+              <div className="space-y-2 max-w-md">
+                <h2 className="font-display text-3xl sm:text-4xl bg-gradient-to-r from-blue-400 via-fuchsia-400 to-amber-300 bg-clip-text text-transparent leading-tight">
+                  Hi, let's get started
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  Ask any doubt, get full explanations, or ask how to use anything in the app.
                 </p>
               </div>
             </div>
@@ -626,34 +629,26 @@ export function ChatInterface({ notebook }: ChatInterfaceProps) {
                   .map((p) => (p.type === "text" ? p.text : ""))
                   .join("");
 
-                return (
-                  <div key={m.id} className={`flex gap-4 ${isUser ? "justify-end" : "justify-start"} animate-fade-in`}>
-                    {!isUser && (
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded bg-white/5 text-white border border-white/10 shadow-xl">
-                        <Bot className="h-4 w-4 stroke-[1.5]" />
+                if (isUser) {
+                  return (
+                    <div key={m.id} className="flex justify-end animate-fade-in">
+                      <div className="max-w-[85%] rounded-3xl rounded-tr-md bg-white/[0.07] border border-white/10 px-4 py-2.5 text-sm text-zinc-100 whitespace-pre-wrap font-sans">
+                        {textContent}
                       </div>
-                    )}
-                    <div
-                      className={`max-w-[85%] rounded-lg px-5 py-3.5 text-xs sm:text-sm leading-relaxed transition-all duration-300 ${
-                        isUser
-                          ? "bg-white text-black font-medium shadow-md font-sans rounded-tr-none whitespace-pre-wrap"
-                          : "bg-white/[0.02] border border-white/[0.06] text-zinc-200 rounded-tl-none font-sans prose prose-invert prose-sm max-w-none prose-p:my-2 prose-headings:my-3 prose-pre:bg-black/40 prose-code:text-primary"
-                      }`}
-                    >
-                      {isUser ? textContent : (
-                        <ReactMarkdown
-                          remarkPlugins={[remarkGfm, remarkMath]}
-                          rehypePlugins={[rehypeRaw, rehypeKatex]}
-                        >
-                          {textContent}
-                        </ReactMarkdown>
-                      )}
                     </div>
-                    {isUser && (
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded bg-zinc-900 border border-white/5 text-zinc-400">
-                        <User className="h-4 w-4 stroke-[1.5]" />
-                      </div>
-                    )}
+                  );
+                }
+
+                return (
+                  <div key={m.id} className="animate-fade-in">
+                    <div className="text-[15px] leading-relaxed text-zinc-100 font-sans prose prose-invert max-w-none prose-p:my-2 prose-headings:mt-4 prose-headings:mb-2 prose-headings:font-semibold prose-h2:text-xl prose-h3:text-base prose-strong:text-white prose-a:text-blue-400 prose-pre:bg-black/50 prose-pre:border prose-pre:border-white/10 prose-code:text-amber-300 prose-code:before:content-none prose-code:after:content-none prose-ul:my-2 prose-ol:my-2 prose-li:my-0.5">
+                      <ReactMarkdown
+                        remarkPlugins={[remarkGfm, remarkMath]}
+                        rehypePlugins={[rehypeRaw, rehypeKatex]}
+                      >
+                        {textContent || (busy ? "…" : "")}
+                      </ReactMarkdown>
+                    </div>
                   </div>
                 );
               })}
@@ -661,10 +656,10 @@ export function ChatInterface({ notebook }: ChatInterfaceProps) {
           )}
 
           {/* Thinking process indicator */}
-          {busy && !isGeneratingQuestions && (
-            <div className="flex items-center gap-3 text-xs text-zinc-500 pl-12 font-mono uppercase tracking-widest animate-pulse">
-              <Loader2 className="h-3.5 w-3.5 animate-spin text-white" />
-              <span>{t("tutor.thinking")}</span>
+          {busy && !isGeneratingQuestions && status !== "streaming" && (
+            <div className="flex items-center gap-2 text-sm text-zinc-400 animate-pulse">
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              <span>Thinking…</span>
             </div>
           )}
         </div>
@@ -701,7 +696,7 @@ export function ChatInterface({ notebook }: ChatInterfaceProps) {
             </div>
           )}
 
-          <div className="relative flex items-center bg-[#09090b]/90 border border-white/10 rounded-lg focus-within:border-white/30 transition-all duration-500 p-2 shadow-2xl shadow-black/95">
+          <div className="relative flex items-center gap-2 bg-white/[0.06] border border-white/10 rounded-full focus-within:border-white/25 transition-all duration-300 pl-2 pr-2 py-1.5 shadow-lg shadow-black/40">
             <input
               ref={fileInputRef}
               type="file"
@@ -715,7 +710,7 @@ export function ChatInterface({ notebook }: ChatInterfaceProps) {
               onClick={() => fileInputRef.current?.click()}
               disabled={busy || isTestLocked || isExtractingImage}
               title="Attach notebook image"
-              className="grid h-9 w-9 shrink-0 place-items-center rounded bg-white/[0.04] border border-white/10 text-zinc-300 hover:text-white hover:bg-white/[0.08] transition disabled:opacity-40"
+              className="grid h-9 w-9 shrink-0 place-items-center rounded-full text-zinc-300 hover:text-white hover:bg-white/[0.08] transition disabled:opacity-40"
             >
               {isExtractingImage ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -730,26 +725,19 @@ export function ChatInterface({ notebook }: ChatInterfaceProps) {
               placeholder={
                 isTestLocked
                   ? t("tutor.placeholder.locked")
-                  : t("tutor.placeholder")
+                  : "Ask Trackora"
               }
               disabled={busy || isTestLocked}
-              className="bg-transparent border-none text-xs sm:text-sm text-white focus-visible:ring-0 shadow-none px-3 flex-1 h-10 placeholder-zinc-600 font-sans tracking-wide"
+              className="bg-transparent border-none text-sm text-white focus-visible:ring-0 shadow-none px-2 flex-1 h-10 placeholder-zinc-500 font-sans"
             />
             
-            <div className="flex items-center gap-2 pr-2">
-              {input.trim() && !busy && (
-                <span className="hidden sm:inline text-[9px] font-mono text-zinc-600 tracking-wider">
-                  PRESS ENTER <CornerDownLeft className="h-2.5 w-2.5 inline ml-0.5" />
-                </span>
-              )}
-              <Button 
-                type="submit" 
-                disabled={busy || isTestLocked || (!input.trim() && attachedImages.length === 0)}
-                className="rounded h-9 px-4 bg-primary hover:bg-primary/90 text-primary-foreground flex items-center justify-center shrink-0 transition-transform active:scale-95"
-              >
-                <Send className="h-4 w-4" />
-              </Button>
-            </div>
+            <Button 
+              type="submit" 
+              disabled={busy || isTestLocked || (!input.trim() && attachedImages.length === 0)}
+              className="rounded-full h-9 w-9 p-0 bg-primary hover:bg-primary/90 text-primary-foreground grid place-items-center shrink-0 transition-transform active:scale-95 disabled:opacity-40"
+            >
+              <Send className="h-4 w-4" />
+            </Button>
           </div>
         </form>
       </main>
