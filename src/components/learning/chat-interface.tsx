@@ -607,14 +607,17 @@ export function ChatInterface({ notebook }: ChatInterfaceProps) {
 
           {/* Chat Messages */}
           {messages.length === 0 && practiceQuestions.length === 0 ? (
-            <div className="flex h-full flex-col items-center justify-center text-center space-y-5 py-24">
-              <div className="grid h-14 w-14 place-items-center rounded-2xl bg-primary/10 border border-primary/20 text-primary shadow-lg shadow-primary/10">
-                <Bot className="h-6 w-6 stroke-[1.5]" />
-              </div>
-              <div className="space-y-2">
-                <p className="font-display text-2xl text-foreground text-balance">{t("tutor.ready")}</p>
-                <p className="max-w-sm font-ui text-xs uppercase tracking-[0.25em] text-muted-foreground">
-                  {t("tutor.readyDesc")}
+            <div className="flex h-full flex-col items-center justify-center text-center space-y-6 py-24">
+              <div
+                aria-hidden
+                className="h-16 w-16 rounded-[14px] rotate-45 bg-[conic-gradient(from_180deg,#4285F4,#9B72CB,#D96570,#F5B33C,#4285F4)] shadow-[0_0_60px_-10px_rgba(155,114,203,0.6)]"
+              />
+              <div className="space-y-2 max-w-md">
+                <h2 className="font-display text-3xl sm:text-4xl bg-gradient-to-r from-blue-400 via-fuchsia-400 to-amber-300 bg-clip-text text-transparent leading-tight">
+                  Hi, let's get started
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  Ask any doubt, get full explanations, or ask how to use anything in the app.
                 </p>
               </div>
             </div>
@@ -626,34 +629,26 @@ export function ChatInterface({ notebook }: ChatInterfaceProps) {
                   .map((p) => (p.type === "text" ? p.text : ""))
                   .join("");
 
-                return (
-                  <div key={m.id} className={`flex gap-4 ${isUser ? "justify-end" : "justify-start"} animate-fade-in`}>
-                    {!isUser && (
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded bg-white/5 text-white border border-white/10 shadow-xl">
-                        <Bot className="h-4 w-4 stroke-[1.5]" />
+                if (isUser) {
+                  return (
+                    <div key={m.id} className="flex justify-end animate-fade-in">
+                      <div className="max-w-[85%] rounded-3xl rounded-tr-md bg-white/[0.07] border border-white/10 px-4 py-2.5 text-sm text-zinc-100 whitespace-pre-wrap font-sans">
+                        {textContent}
                       </div>
-                    )}
-                    <div
-                      className={`max-w-[85%] rounded-lg px-5 py-3.5 text-xs sm:text-sm leading-relaxed transition-all duration-300 ${
-                        isUser
-                          ? "bg-white text-black font-medium shadow-md font-sans rounded-tr-none whitespace-pre-wrap"
-                          : "bg-white/[0.02] border border-white/[0.06] text-zinc-200 rounded-tl-none font-sans prose prose-invert prose-sm max-w-none prose-p:my-2 prose-headings:my-3 prose-pre:bg-black/40 prose-code:text-primary"
-                      }`}
-                    >
-                      {isUser ? textContent : (
-                        <ReactMarkdown
-                          remarkPlugins={[remarkGfm, remarkMath]}
-                          rehypePlugins={[rehypeRaw, rehypeKatex]}
-                        >
-                          {textContent}
-                        </ReactMarkdown>
-                      )}
                     </div>
-                    {isUser && (
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded bg-zinc-900 border border-white/5 text-zinc-400">
-                        <User className="h-4 w-4 stroke-[1.5]" />
-                      </div>
-                    )}
+                  );
+                }
+
+                return (
+                  <div key={m.id} className="animate-fade-in">
+                    <div className="text-[15px] leading-relaxed text-zinc-100 font-sans prose prose-invert max-w-none prose-p:my-2 prose-headings:mt-4 prose-headings:mb-2 prose-headings:font-semibold prose-h2:text-xl prose-h3:text-base prose-strong:text-white prose-a:text-blue-400 prose-pre:bg-black/50 prose-pre:border prose-pre:border-white/10 prose-code:text-amber-300 prose-code:before:content-none prose-code:after:content-none prose-ul:my-2 prose-ol:my-2 prose-li:my-0.5">
+                      <ReactMarkdown
+                        remarkPlugins={[remarkGfm, remarkMath]}
+                        rehypePlugins={[rehypeRaw, rehypeKatex]}
+                      >
+                        {textContent || (busy ? "…" : "")}
+                      </ReactMarkdown>
+                    </div>
                   </div>
                 );
               })}
@@ -661,10 +656,10 @@ export function ChatInterface({ notebook }: ChatInterfaceProps) {
           )}
 
           {/* Thinking process indicator */}
-          {busy && !isGeneratingQuestions && (
-            <div className="flex items-center gap-3 text-xs text-zinc-500 pl-12 font-mono uppercase tracking-widest animate-pulse">
-              <Loader2 className="h-3.5 w-3.5 animate-spin text-white" />
-              <span>{t("tutor.thinking")}</span>
+          {busy && !isGeneratingQuestions && status !== "streaming" && (
+            <div className="flex items-center gap-2 text-sm text-zinc-400 animate-pulse">
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              <span>Thinking…</span>
             </div>
           )}
         </div>
