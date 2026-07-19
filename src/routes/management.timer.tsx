@@ -23,6 +23,7 @@ import {
   type TabSwitchDetail,
 } from "@/lib/study-sessions-store";
 import { addXP } from "@/lib/profile-store";
+import { setFocusTopic } from "@/lib/focus-topic-store";
 
 export const Route = createFileRoute("/management/timer")({
   component: FocusTimer,
@@ -270,6 +271,13 @@ function FocusTimer() {
     sessionStartTimeRef.current = Date.now();
     setIsActive(true);
     setIsPaused(false);
+    setFocusTopic({
+      chapterId: `timer:${selectedClass}:${selectedSubject}:${selectedChapter}`,
+      title: selectedChapter,
+      subject: selectedSubject,
+      classLevel: selectedClass,
+      board: "Telangana SCERT",
+    });
     if (isStrictSimulation) triggerFullscreen();
     addAlert(`Session started: ${selectedChapter}`, "success");
   };
