@@ -608,10 +608,6 @@ export function ChatInterface({ notebook }: ChatInterfaceProps) {
           {/* Chat Messages */}
           {messages.length === 0 && practiceQuestions.length === 0 ? (
             <div className="flex h-full flex-col items-center justify-center text-center space-y-6 py-24">
-              <div
-                aria-hidden
-                className="h-16 w-16 rounded-[14px] rotate-45 bg-[conic-gradient(from_180deg,#4285F4,#9B72CB,#D96570,#F5B33C,#4285F4)] shadow-[0_0_60px_-10px_rgba(155,114,203,0.6)]"
-              />
               <div className="space-y-2 max-w-md">
                 <h2 className="font-display text-3xl sm:text-4xl bg-gradient-to-r from-blue-400 via-fuchsia-400 to-amber-300 bg-clip-text text-transparent leading-tight">
                   Hi, let's get started
