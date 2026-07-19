@@ -1,9 +1,8 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useEffect } from "react";
-import { ArrowLeft, ExternalLink, Tag, Target } from "lucide-react";
+import { ArrowLeft, ExternalLink, Tag } from "lucide-react";
 import { findChapter } from "@/lib/materials-data";
 import { Badge } from "@/components/ui/badge";
-import { setFocusTopic } from "@/lib/focus-topic-store";
 import { logActivity } from "@/lib/profile-store";
 
 export const Route = createFileRoute("/materials/$chapterId")({
@@ -56,18 +55,11 @@ function ChapterView() {
   const { chapter, classLevel, subject, board } = Route.useLoaderData();
 
   useEffect(() => {
-    setFocusTopic({
-      chapterId: chapter.id,
-      title: chapter.title,
-      subject: subject.name,
-      classLevel: classLevel.name,
-      board,
-    });
     logActivity("materials.open-chapter", {
       chapterId: chapter.id,
       title: chapter.title,
     });
-  }, [chapter.id, chapter.title, subject.name, classLevel.name, board]);
+  }, [chapter.id, chapter.title]);
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
@@ -78,12 +70,10 @@ function ChapterView() {
         <ArrowLeft className="h-3.5 w-3.5" /> All textbooks
       </Link>
 
-      <div className="mb-4 flex flex-wrap items-center gap-2 rounded-lg border border-primary/30 bg-primary/5 px-3 py-2 text-xs">
-        <Target className="h-3.5 w-3.5 text-primary" />
-        <span className="font-medium text-primary">Set as focus topic</span>
+      <div className="mb-4 flex flex-wrap items-center gap-2 rounded-lg border bg-muted/40 px-3 py-2 text-xs">
         <span className="text-muted-foreground">
-          — your 3-hour endurance timer will now track focus against this
-          textbook.
+          Want to focus on this chapter? Pick the class, subject, and chapter
+          manually in the timer.
         </span>
         <Link
           to="/management/timer"
