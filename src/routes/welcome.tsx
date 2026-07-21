@@ -11,6 +11,8 @@ import {
   MessageCircle,
 } from "lucide-react";
 import { measureFps, usePerf } from "@/lib/perf";
+import { useFocusTopic } from "@/lib/focus-topic-store";
+import { useStudySessions } from "@/lib/study-sessions-store";
 
 const VISITED_KEY = "trackora:welcomed";
 
@@ -153,6 +155,8 @@ function MiniAskAI() {
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const focus = useFocusTopic();
+  const sessions = useStudySessions();
 
   useEffect(() => {
     scrollRef.current?.scrollTo({
@@ -192,6 +196,8 @@ function MiniAskAI() {
         body: JSON.stringify({
           messages: payload,
           language: "english",
+          focus,
+          recent: sessions.slice(0, 5),
         }),
       });
       if (!res.ok || !res.body) throw new Error("network");
