@@ -100,8 +100,20 @@ function Welcome() {
         </div>
       </div>
 
+      {/* Try the AI — third section on the welcome page */}
+      <div className="mt-8 w-full max-w-md">
+        <div className="mb-2 flex items-center justify-center gap-2 font-ui text-sm font-semibold text-foreground">
+          <Sparkles className="h-4 w-4 text-primary" />
+          Try our AI — ask a quick doubt
+        </div>
+        <div className="mb-3 text-center font-ui text-xs text-muted-foreground">
+          It knows your active focus and recent sessions.
+        </div>
+        <MiniAskAI />
+      </div>
+
       {/* CTA */}
-      <div className="mt-8 flex w-full max-w-md flex-col items-center gap-3">
+      <div className="mt-8 flex w-full max-w-md flex-col items-center gap-3 pb-4">
         <button
           onClick={enter}
           className="group inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-6 py-3.5 font-ui text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition hover:brightness-110 active:scale-[0.98]"
@@ -112,18 +124,6 @@ function Welcome() {
         <div className="text-center font-ui text-[11px] text-muted-foreground">
           AI can make mistakes — please double check important information.
         </div>
-      </div>
-
-      {/* Try the AI — interactive (secondary section, below CTA) */}
-      <div className="mt-10 w-full max-w-md pb-4">
-        <div className="mb-2 flex items-center justify-center gap-2 font-ui text-sm font-semibold text-foreground">
-          <Sparkles className="h-4 w-4 text-primary" />
-          Try our AI — ask a quick doubt
-        </div>
-        <div className="mb-3 text-center font-ui text-xs text-muted-foreground">
-          Colored, structured answers you can actually read.
-        </div>
-        <MiniAskAI />
       </div>
 
       {askLite && <PerfDialog onChoose={choose} />}
