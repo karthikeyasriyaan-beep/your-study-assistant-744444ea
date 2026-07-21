@@ -9,6 +9,19 @@ type ChatRequestBody = {
   messages?: unknown;
   context?: string;
   language?: "english" | "hindi" | string; // Toggle parameters
+  focus?: {
+    classLevel?: string;
+    board?: string;
+    subject?: string;
+    title?: string;
+  } | null;
+  recent?: Array<{
+    subject?: string;
+    chapterTitle?: string;
+    totalDurationSeconds?: number;
+    actualFocusSeconds?: number;
+    timestamp?: string;
+  }>;
 };
 
 const TUTOR_SYSTEM = `You are Trackora AI — a friendly, capable study companion inside the Trackora / Smart Study Hub app. You behave like Google Gemini: warm, clear, well-formatted, and genuinely helpful.
@@ -56,9 +69,32 @@ export const Route = createFileRoute("/api/chat")({
             ? `\n\n--- STUDENT NOTEBOOK CONTEXT ---\n${body.context}\n--- END CONTEXT ---`
             : "\n\n(No notebook context uploaded — answer from verified global curriculum facts.)";
 
+          // Autocontext: current focus + recent study activity
+          const autoParts: string[] = [];
+          if (body.focus && (body.focus.subject || body.focus.title)) {
+            const f = body.focus;
+            autoParts.push(
+              `Active focus: Class ${f.classLevel ?? "?"} · ${f.board ?? ""} · ${f.subject ?? ""} — ${f.title ?? ""}`.trim(),
+            );
+          }
+          if (Array.isArray(body.recent) && body.recent.length > 0) {
+            const lines = body.recent.slice(0, 5).map((s) => {
+              const mins = Math.round((s.totalDurationSeconds ?? 0) / 60);
+              const focusPct = s.totalDurationSeconds
+                ? Math.round(((s.actualFocusSeconds ?? 0) / s.totalDurationSeconds) * 100)
+                : 0;
+              const when = s.timestamp ? new Date(s.timestamp).toLocaleDateString() : "";
+              return `• ${s.subject ?? "?"} — ${s.chapterTitle ?? "?"} (${mins}m, ${focusPct}% focus, ${when})`;
+            });
+            autoParts.push("Recent study sessions:\n" + lines.join("\n"));
+          }
+          const autoContext = autoParts.length
+            ? `\n\n--- LIVE APP CONTEXT (autocontext) ---\n${autoParts.join("\n\n")}\nWhen the student says "this topic" or "explain this", assume they mean the active focus above. Reference their recent activity when relevant.\n--- END LIVE APP CONTEXT ---`
+            : "";
+
           const result = streamText({
             model,
-            system: TUTOR_SYSTEM + languagePrompt + contextBlock,
+            system: TUTOR_SYSTEM + languagePrompt + autoContext + contextBlock,
             messages: await convertToModelMessages(body.messages as UIMessage[]),
           });
 
