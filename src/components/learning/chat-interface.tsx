@@ -33,6 +33,8 @@ import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Notebook } from "@/lib/storage";
 import { useI18n } from "@/lib/i18n";
+import { useFocusTopic } from "@/lib/focus-topic-store";
+import { useStudySessions } from "@/lib/study-sessions-store";
 
 // ==========================================
 // --- Part 1: Type Interfaces ---
@@ -86,6 +88,10 @@ export function ChatInterface({ notebook }: ChatInterfaceProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [attachedImages, setAttachedImages] = useState<{ name: string; dataUrl: string }[]>([]);
   const [isExtractingImage, setIsExtractingImage] = useState(false);
+
+  // Autocontext sources (live app state)
+  const liveFocus = useFocusTopic();
+  const liveSessions = useStudySessions();
 
   // ==========================================
   // --- Part 2: Reactive State Observers ---
@@ -188,7 +194,9 @@ export function ChatInterface({ notebook }: ChatInterfaceProps) {
         body: JSON.stringify({
           messages: updatedMessages,
           context: groundingContext,
-          language
+          language,
+          focus: liveFocus,
+          recent: liveSessions.slice(0, 5),
         })
       });
 
