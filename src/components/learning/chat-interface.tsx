@@ -33,6 +33,8 @@ import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Notebook } from "@/lib/storage";
 import { useI18n } from "@/lib/i18n";
+import { useFocusTopic } from "@/lib/focus-topic-store";
+import { useStudySessions } from "@/lib/study-sessions-store";
 
 // ==========================================
 // --- Part 1: Type Interfaces ---
