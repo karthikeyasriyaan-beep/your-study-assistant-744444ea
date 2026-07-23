@@ -32,8 +32,8 @@ const STEPS: Step[] = [
   {
     icon: Brain,
     tag: "AI Tutor",
-    title: "Ask, don't get answers",
-    body: "A Socratic tutor that gives hints, colored explanations, and structured steps — never direct solutions. Attach a notebook photo too.",
+    title: "Ask, get full explanations",
+    body: "A friendly AI tutor that gives complete answers with clear steps, formulas, and examples. Attach a notebook photo for instant help.",
     accent: "from-fuchsia-500/40 to-fuchsia-500/5",
   },
   {
