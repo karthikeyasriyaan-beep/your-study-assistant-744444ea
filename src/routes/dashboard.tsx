@@ -29,7 +29,6 @@ import {
 } from "@/lib/study-sessions-store";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { MiniAskAI } from "@/components/mini-ask-ai";
 
 export const Route = createFileRoute("/dashboard")({
   component: DashboardPage,
@@ -60,7 +59,6 @@ function DashboardPage() {
     <div className="mx-auto w-full max-w-6xl space-y-5 px-4 pb-6 pt-3 sm:px-6 lg:px-8 lg:pt-6">
       <Greeting />
       <ActiveFocusCard focus={focus} />
-      <MiniAskAI />
       <QuickActionsGrid />
       <TelemetrySummary sessions={sessions} />
       <RecentSessions sessions={sessions} />
