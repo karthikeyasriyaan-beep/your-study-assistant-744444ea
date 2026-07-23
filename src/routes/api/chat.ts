@@ -62,7 +62,13 @@ export const Route = createFileRoute("/api/chat")({
           const model = gateway("google/gemini-2.5-flash");
 
           // Read the selected language from the client state (defaults to English)
-          const targetLanguage = body.language === "hindi" ? "HINDI" : "ENGLISH";
+          const langRaw = String(body.language ?? "english").toLowerCase();
+          const targetLanguage =
+            langRaw === "hindi"
+              ? "HINDI (Devanagari script)"
+              : langRaw === "telugu"
+                ? "TELUGU (Telugu script)"
+                : "ENGLISH";
           const languagePrompt = `\n\n--- SYSTEM DIRECTIVE: YOU MUST WRITE YOUR COMPREHENSIVE REPLIES IN ${targetLanguage} ONLY ---`;
 
           const contextBlock = body.context
