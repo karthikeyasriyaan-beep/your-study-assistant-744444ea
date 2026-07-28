@@ -7,8 +7,6 @@ import {
   Brain,
   BookOpen,
   Timer,
-  Mic,
-  Camera,
   Check,
 } from "lucide-react";
 import { measureFps, usePerf } from "@/lib/perf";
