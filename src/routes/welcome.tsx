@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ArrowRight,
   Sparkles,
@@ -37,10 +37,63 @@ export const Route = createFileRoute("/welcome")({
   ssr: false,
 });
 
+/* ---------- scroll-reveal hook ---------- */
+function useReveal<T extends HTMLElement>() {
+  const ref = useRef<T | null>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.unobserve(el);
+        }
+      },
+      { threshold: 0.15, rootMargin: "0px 0px -60px 0px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return { ref, visible };
+}
+
+function Reveal({
+  children,
+  className = "",
+  delay = 0,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  delay?: number;
+}) {
+  const { ref, visible } = useReveal<HTMLDivElement>();
+  return (
+    <div
+      ref={ref}
+      className={`transition-all duration-700 ease-out motion-reduce:transition-none ${
+        visible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+      } ${className}`}
+      style={{ transitionDelay: visible ? `${delay}ms` : "0ms" }}
+    >
+      {children}
+    </div>
+  );
+}
+
 function Welcome() {
   const navigate = useNavigate();
   const { setMode } = usePerf();
   const [askLite, setAskLite] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setLoaded(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -69,6 +122,15 @@ function Welcome() {
     setAskLite(false);
   };
 
+  // hero entrance stagger — page-load only, not scroll-triggered
+  const heroStep = (i: number) => ({
+    transitionDelay: loaded ? `${i * 90}ms` : "0ms",
+  });
+  const heroClass = (i: number) =>
+    `transition-all duration-700 ease-out motion-reduce:transition-none ${
+      loaded ? "translate-y-0 opacity-100" : "translate-y-5 opacity-0"
+    }`;
+
   return (
     <div className="relative min-h-[100dvh] w-full overflow-x-hidden bg-background text-foreground">
       <div
@@ -77,12 +139,17 @@ function Welcome() {
       />
 
       {/* Top bar */}
-      <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-5">
+      <header
+        className={`mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-5 ${heroClass(0)}`}
+        style={heroStep(0)}
+      >
         <div className="flex items-center gap-2">
           <div className="grid h-8 w-8 place-items-center rounded-lg bg-primary text-primary-foreground shadow-md shadow-primary/20">
             <Sparkles className="h-4 w-4" />
           </div>
-          <div className="font-display text-lg leading-none">Stutora</div>
+          <div className="font-display text-lg font-bold leading-none tracking-tight">
+            Stutora
+          </div>
         </div>
         <button
           onClick={enter}
@@ -93,31 +160,47 @@ function Welcome() {
       </header>
 
       {/* HERO */}
-      <section className="mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-10 px-6 pb-14 pt-6 lg:grid-cols-[1.05fr_1fr] lg:gap-16 lg:pt-12">
+      <section className="mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-10 px-6 pb-24 pt-8 lg:grid-cols-[1.05fr_1fr] lg:gap-16 lg:pt-14">
         <div className="text-center lg:text-left">
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-3 py-1 font-ui text-[10px] uppercase tracking-[0.28em] text-muted-foreground backdrop-blur">
+          <div className={`inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-3 py-1 font-ui text-[10px] uppercase tracking-[0.28em] text-muted-foreground backdrop-blur ${heroClass(1)}`} style={heroStep(1)}>
             Built for Telangana board · Classes 6–Inter
           </div>
-          <h1 className="mt-5 font-display text-[40px] leading-[1.05] tracking-tight sm:text-6xl lg:text-[66px]">
-            Your textbook,
-            <br />
-            <span className="italic text-muted-foreground/70">with an AI</span>
-            <br />
-            in the margins.
+
+          <h1 className="mt-5 font-display text-[40px] font-bold leading-[1.03] tracking-tight sm:text-6xl lg:text-[66px]">
+            <span className={`block ${heroClass(2)}`} style={heroStep(2)}>
+              Your textbook,
+            </span>
+            <span className={`block italic font-semibold text-muted-foreground/70 ${heroClass(3)}`} style={heroStep(3)}>
+              with an AI
+            </span>
+            <span className={`block ${heroClass(4)}`} style={heroStep(4)}>
+              in the margins.
+            </span>
           </h1>
-          <p className="mx-auto mt-5 max-w-md font-ui text-[15px] leading-relaxed text-muted-foreground lg:mx-0">
+
+          <p
+            className={`mx-auto mt-5 max-w-md font-ui text-[15px] leading-relaxed text-muted-foreground lg:mx-0 ${heroClass(5)}`}
+            style={heroStep(5)}
+          >
             Stop switching between five tabs to understand one line. Stutora
             reads your chapter with you, explains the confusing part right
             there, and tracks the time you actually spend studying.
           </p>
 
-          <div className="mt-7 flex flex-col items-center gap-3 sm:flex-row sm:justify-center lg:justify-start">
+          <div
+            className={`mt-7 flex flex-col items-center gap-3 sm:flex-row sm:justify-center lg:justify-start ${heroClass(6)}`}
+            style={heroStep(6)}
+          >
             <button
               onClick={enter}
-              className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-6 py-3.5 font-ui text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition hover:brightness-110 active:scale-[0.98] sm:w-auto"
+              className="group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full bg-primary px-6 py-3.5 font-ui text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition hover:brightness-110 active:scale-[0.98] sm:w-auto"
             >
-              Start studying free
-              <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
+              <span
+                aria-hidden
+                className="absolute inset-0 -translate-x-full bg-white/20 transition-transform duration-700 group-hover:translate-x-full"
+              />
+              <span className="relative">Start studying free</span>
+              <ArrowRight className="relative h-4 w-4 transition group-hover:translate-x-0.5" />
             </button>
             <button
               onClick={enter}
@@ -127,7 +210,10 @@ function Welcome() {
             </button>
           </div>
 
-          <ul className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 font-ui text-xs text-muted-foreground lg:justify-start">
+          <ul
+            className={`mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 font-ui text-xs text-muted-foreground lg:justify-start ${heroClass(7)}`}
+            style={heroStep(7)}
+          >
             {["Free forever", "No signup needed", "NCERT + state board"].map((t) => (
               <li key={t} className="inline-flex items-center gap-1.5">
                 <span className="grid h-4 w-4 place-items-center rounded-full border border-primary/40 text-primary">
@@ -140,7 +226,10 @@ function Welcome() {
         </div>
 
         {/* SIGNATURE: textbook page with AI margin note */}
-        <div className="relative">
+        <div
+          className={`relative ${heroClass(3)}`}
+          style={{ ...heroStep(3), transform: loaded ? "scale(1)" : "scale(0.96)" }}
+        >
           <div
             aria-hidden
             className="absolute -inset-6 -z-10 rounded-[32px] blur-2xl"
@@ -148,7 +237,7 @@ function Welcome() {
               background: `radial-gradient(50% 50% at 50% 50%, color-mix(in oklab, ${MINT} 18%, transparent), transparent 75%)`,
             }}
           />
-          <div className="rounded-3xl border border-white/[0.08] bg-white/[0.02] p-6 shadow-2xl backdrop-blur-xl">
+          <div className="rounded-3xl border border-white/[0.08] bg-white/[0.02] p-6 shadow-2xl backdrop-blur-xl transition-transform duration-500 hover:-translate-y-1">
             <div className="mb-4 flex items-center gap-1.5">
               <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
                 Physics · Ch 4 · Laws of Motion
@@ -159,24 +248,24 @@ function Welcome() {
                 Every object continues in its state of rest, or of uniform
                 motion in a straight line, unless it is compelled to change
                 that state by{" "}
-                <span className="relative inline">
-                  <span
-                    className="relative z-10 text-foreground"
-                    style={{ boxShadow: `inset 0 -2px 0 0 ${MINT}` }}
-                  >
-                    forces impressed
-                  </span>
+                <span
+                  className="relative z-10 text-foreground"
+                  style={{ boxShadow: `inset 0 -2px 0 0 ${MINT}` }}
+                >
+                  forces impressed
                 </span>{" "}
                 upon it. This principle is known as the law of inertia.
               </p>
             </div>
 
-            {/* floating margin note */}
             <div
-              className="relative mt-4 ml-6 max-w-[85%] rounded-2xl border p-3.5"
+              className={`relative mt-4 ml-6 max-w-[85%] rounded-2xl border p-3.5 transition-all duration-500 ${
+                loaded ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
+              }`}
               style={{
-                borderColor: "color-mix(in oklab, " + MINT + " 35%, transparent)",
-                background: "color-mix(in oklab, " + MINT + " 8%, transparent)",
+                borderColor: `color-mix(in oklab, ${MINT} 35%, transparent)`,
+                background: `color-mix(in oklab, ${MINT} 8%, transparent)`,
+                transitionDelay: loaded ? "650ms" : "0ms",
               }}
             >
               <div className="flex items-center gap-1.5">
@@ -197,161 +286,201 @@ function Welcome() {
         </div>
       </section>
 
+      <SectionDivider />
+
       {/* WHAT'S INSIDE */}
-      <section className="mx-auto w-full max-w-6xl px-6 pb-14">
-        <div className="text-center">
-          <h2 className="font-display text-3xl tracking-tight sm:text-4xl">
+      <section className="mx-auto w-full max-w-6xl px-6 py-20 lg:py-24">
+        <Reveal className="text-center">
+          <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
             Everything exam season needs, one place.
           </h2>
           <p className="mx-auto mt-3 max-w-lg font-ui text-sm text-muted-foreground">
             No more one app for notes, one for doubts, one for timing yourself.
           </p>
-        </div>
-        <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <FeatureCard
-            icon={MessageCircleQuestion}
-            title="Ask any doubt"
-            body="Full explanations and worked examples, grounded in the exact chapter you're on."
-            tag="AI Tutor"
-          />
-          <FeatureCard
-            icon={BookOpen}
-            title="Your real syllabus"
-            body="NCERT and Telangana state board chapters, organised by class — nothing extra to search for."
-            tag="Materials"
-          />
-          <FeatureCard
-            icon={ListChecks}
-            title="Practice that adapts"
-            body="Quiz yourself chapter by chapter and see exactly where marks are slipping."
-            tag="Practice"
-          />
-          <FeatureCard
-            icon={Timer}
-            title="Time that counts"
-            body="A focus timer that logs every session by subject, so revision isn't a guess."
-            tag="Focus"
-          />
+        </Reveal>
+        <div className="mt-10 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <Reveal delay={0}>
+            <FeatureCard
+              icon={MessageCircleQuestion}
+              title="Ask any doubt"
+              body="Full explanations and worked examples, grounded in the exact chapter you're on."
+              tag="AI Tutor"
+            />
+          </Reveal>
+          <Reveal delay={80}>
+            <FeatureCard
+              icon={BookOpen}
+              title="Your real syllabus"
+              body="NCERT and Telangana state board chapters, organised by class — nothing extra to search for."
+              tag="Materials"
+            />
+          </Reveal>
+          <Reveal delay={160}>
+            <FeatureCard
+              icon={ListChecks}
+              title="Practice that adapts"
+              body="Quiz yourself chapter by chapter and see exactly where marks are slipping."
+              tag="Practice"
+            />
+          </Reveal>
+          <Reveal delay={240}>
+            <FeatureCard
+              icon={Timer}
+              title="Time that counts"
+              body="A focus timer that logs every session by subject, so revision isn't a guess."
+              tag="Focus"
+            />
+          </Reveal>
         </div>
       </section>
+
+      <SectionDivider />
 
       {/* TRY AI */}
-      <section className="mx-auto w-full max-w-2xl px-6 pb-14">
-        <div className="mb-2 flex items-center justify-center gap-2 font-ui text-sm font-semibold text-foreground">
-          <Sparkles className="h-4 w-4 text-primary" />
-          Try it — ask a real doubt
-        </div>
-        <div className="mb-4 text-center font-ui text-xs text-muted-foreground">
-          No signup needed. Ask anything from your syllabus.
-        </div>
-        <MiniAskAI />
+      <section className="mx-auto w-full max-w-2xl px-6 py-20 lg:py-24">
+        <Reveal>
+          <div className="mb-2 flex items-center justify-center gap-2 font-ui text-sm font-semibold text-foreground">
+            <Sparkles className="h-4 w-4 text-primary" />
+            Try it — ask a real doubt
+          </div>
+          <div className="mb-4 text-center font-ui text-xs text-muted-foreground">
+            No signup needed. Ask anything from your syllabus.
+          </div>
+          <MiniAskAI />
+        </Reveal>
       </section>
 
-      {/* HOW IT WORKS — legitimate sequence, numbered */}
-      <section className="mx-auto w-full max-w-6xl px-6 pb-14">
-        <div className="rounded-3xl border border-white/[0.08] bg-white/[0.02] p-8 backdrop-blur">
-          <div className="text-center">
-            <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-primary">
-              How it works
+      <SectionDivider />
+
+      {/* HOW IT WORKS */}
+      <section className="mx-auto w-full max-w-6xl px-6 py-20 lg:py-24">
+        <Reveal>
+          <div className="rounded-3xl border border-white/[0.08] bg-white/[0.02] p-8 backdrop-blur">
+            <div className="text-center">
+              <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-primary">
+                How it works
+              </div>
+              <h3 className="mt-2 font-display text-2xl font-bold tracking-tight sm:text-3xl">
+                Four steps, every single session.
+              </h3>
             </div>
-            <h3 className="mt-2 font-display text-2xl tracking-tight sm:text-3xl">
-              Four steps, every single session.
-            </h3>
+            <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <StepPill n="1" title="Pick a chapter" body="From your class and subject list" />
+              <StepPill n="2" title="Read, or ask" body="Highlight anything confusing" />
+              <StepPill n="3" title="Practice it" body="A few questions to check it stuck" />
+              <StepPill n="4" title="See your time" body="Logged automatically, by subject" />
+            </div>
           </div>
-          <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <StepPill n="1" title="Pick a chapter" body="From your class and subject list" />
-            <StepPill n="2" title="Read, or ask" body="Highlight anything confusing" />
-            <StepPill n="3" title="Practice it" body="A few questions to check it stuck" />
-            <StepPill n="4" title="See your time" body="Logged automatically, by subject" />
-          </div>
-        </div>
+        </Reveal>
       </section>
+
+      <SectionDivider />
 
       {/* COVERAGE STRIP */}
-      <section className="mx-auto w-full max-w-6xl px-6 pb-14">
-        <div className="flex flex-col items-center gap-4 rounded-2xl border border-white/[0.08] bg-white/[0.02] px-6 py-6 text-center sm:flex-row sm:justify-between sm:text-left">
-          <div className="flex items-center gap-3">
-            <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary ring-1 ring-inset ring-primary/20">
-              <GraduationCap className="h-5 w-5" />
-            </div>
-            <div>
-              <div className="font-ui text-sm font-medium text-foreground">
-                Classes 6 through Intermediate
+      <section className="mx-auto w-full max-w-6xl px-6 py-20 lg:py-24">
+        <Reveal>
+          <div className="flex flex-col items-center gap-4 rounded-2xl border border-white/[0.08] bg-white/[0.02] px-6 py-6 text-center sm:flex-row sm:justify-between sm:text-left">
+            <div className="flex items-center gap-3">
+              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary ring-1 ring-inset ring-primary/20">
+                <GraduationCap className="h-5 w-5" />
               </div>
-              <div className="font-ui text-xs text-muted-foreground">
-                Telangana State Board · NCERT aligned
+              <div>
+                <div className="font-ui text-sm font-semibold text-foreground">
+                  Classes 6 through Intermediate
+                </div>
+                <div className="font-ui text-xs text-muted-foreground">
+                  Telangana State Board · NCERT aligned
+                </div>
               </div>
             </div>
+            <button
+              onClick={enter}
+              className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.1] bg-white/[0.03] px-4 py-2 font-ui text-xs font-medium text-foreground transition hover:bg-white/[0.06]"
+            >
+              See your class <ArrowRight className="h-3.5 w-3.5" />
+            </button>
           </div>
-          <button
-            onClick={enter}
-            className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.1] bg-white/[0.03] px-4 py-2 font-ui text-xs font-medium text-foreground transition hover:bg-white/[0.06]"
-          >
-            See your class <ArrowRight className="h-3.5 w-3.5" />
-          </button>
-        </div>
+        </Reveal>
       </section>
+
+      <SectionDivider />
 
       {/* WHY STUTORA */}
-      <section className="mx-auto w-full max-w-4xl px-6 pb-16">
-        <div className="text-center">
-          <h2 className="font-display text-3xl tracking-tight sm:text-4xl">
+      <section className="mx-auto w-full max-w-4xl px-6 py-20 lg:py-24">
+        <Reveal className="text-center">
+          <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
             Studying shouldn't feel scattered.
           </h2>
-        </div>
-        <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5">
-            <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-              Without Stutora
+        </Reveal>
+        <div className="mt-10 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <Reveal delay={0}>
+            <div className="h-full rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5">
+              <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                Without Stutora
+              </div>
+              <ul className="mt-3 space-y-2 font-ui text-sm text-muted-foreground">
+                <li>A YouTube tab for every doubt</li>
+                <li>PDFs scattered across downloads</li>
+                <li>No idea how much you actually studied</li>
+              </ul>
             </div>
-            <ul className="mt-3 space-y-2 font-ui text-sm text-muted-foreground">
-              <li>A YouTube tab for every doubt</li>
-              <li>PDFs scattered across downloads</li>
-              <li>No idea how much you actually studied</li>
-            </ul>
-          </div>
-          <div
-            className="rounded-2xl border p-5"
-            style={{
-              borderColor: "color-mix(in oklab, " + MINT + " 30%, transparent)",
-              background: "color-mix(in oklab, " + MINT + " 6%, transparent)",
-            }}
-          >
-            <div className="font-mono text-[10px] uppercase tracking-widest" style={{ color: MINT }}>
-              With Stutora
+          </Reveal>
+          <Reveal delay={120}>
+            <div
+              className="h-full rounded-2xl border p-5"
+              style={{
+                borderColor: `color-mix(in oklab, ${MINT} 30%, transparent)`,
+                background: `color-mix(in oklab, ${MINT} 6%, transparent)`,
+              }}
+            >
+              <div className="font-mono text-[10px] uppercase tracking-widest" style={{ color: MINT }}>
+                With Stutora
+              </div>
+              <ul className="mt-3 space-y-2 font-ui text-sm text-foreground/85">
+                <li>Doubts explained in the margin, instantly</li>
+                <li>Every chapter, already organised by class</li>
+                <li>A clear log of every minute, by subject</li>
+              </ul>
             </div>
-            <ul className="mt-3 space-y-2 font-ui text-sm text-foreground/85">
-              <li>Doubts explained in the margin, instantly</li>
-              <li>Every chapter, already organised by class</li>
-              <li>A clear log of every minute, by subject</li>
-            </ul>
-          </div>
+          </Reveal>
         </div>
       </section>
 
+      <SectionDivider />
+
       {/* FINAL CTA */}
-      <section className="mx-auto w-full max-w-3xl px-6 pb-16 text-center">
-        <h2 className="font-display text-3xl tracking-tight sm:text-4xl">
-          Open your first chapter.
-        </h2>
-        <p className="mx-auto mt-3 max-w-lg font-ui text-sm text-muted-foreground">
-          No signup needed to explore. Just open it and start.
-        </p>
-        <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <button
-            onClick={enter}
-            className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-6 py-3.5 font-ui text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition hover:brightness-110 sm:w-auto"
-          >
-            Get started
-            <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
-          </button>
-          <span className="font-ui text-[11px] text-muted-foreground">
-            AI can make mistakes — please double check important information.
-          </span>
-        </div>
+      <section className="mx-auto w-full max-w-3xl px-6 py-24 text-center">
+        <Reveal>
+          <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
+            Open your first chapter.
+          </h2>
+          <p className="mx-auto mt-3 max-w-lg font-ui text-sm text-muted-foreground">
+            No signup needed to explore. Just open it and start.
+          </p>
+          <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <button
+              onClick={enter}
+              className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-6 py-3.5 font-ui text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition hover:brightness-110 sm:w-auto"
+            >
+              Get started
+              <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
+            </button>
+            <span className="font-ui text-[11px] text-muted-foreground">
+              AI can make mistakes — please double check important information.
+            </span>
+          </div>
+        </Reveal>
       </section>
 
       {askLite && <PerfDialog onChoose={choose} />}
+    </div>
+  );
+}
+
+function SectionDivider() {
+  return (
+    <div className="mx-auto w-full max-w-6xl px-6">
+      <div className="h-px w-full bg-gradient-to-r from-transparent via-white/[0.08] to-transparent" />
     </div>
   );
 }
@@ -368,16 +497,16 @@ function FeatureCard({
   tag: string;
 }) {
   return (
-    <div className="group relative overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5 backdrop-blur transition hover:border-primary/30 hover:bg-white/[0.04]">
+    <div className="group relative h-full overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5 backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:bg-white/[0.04] hover:shadow-lg hover:shadow-primary/5">
       <div className="flex items-center justify-between">
-        <div className="grid h-9 w-9 place-items-center rounded-xl bg-primary/10 text-primary ring-1 ring-inset ring-primary/20">
+        <div className="grid h-9 w-9 place-items-center rounded-xl bg-primary/10 text-primary ring-1 ring-inset ring-primary/20 transition-transform duration-300 group-hover:scale-110">
           <Icon className="h-4 w-4" />
         </div>
         <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-muted-foreground">
           {tag}
         </span>
       </div>
-      <div className="mt-4 font-display text-lg tracking-tight">{title}</div>
+      <div className="mt-4 font-display text-lg font-bold tracking-tight">{title}</div>
       <p className="mt-1.5 font-ui text-[13px] leading-relaxed text-muted-foreground">
         {body}
       </p>
@@ -395,12 +524,12 @@ function StepPill({
   body: string;
 }) {
   return (
-    <div className="flex items-start gap-3 rounded-xl border border-white/[0.06] bg-white/[0.02] p-3">
-      <div className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-primary/15 font-mono text-xs text-primary ring-1 ring-inset ring-primary/25">
+    <div className="flex items-start gap-3 rounded-xl border border-white/[0.06] bg-white/[0.02] p-3 transition-colors duration-300 hover:bg-white/[0.04]">
+      <div className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-primary/15 font-mono text-xs font-bold text-primary ring-1 ring-inset ring-primary/25">
         {n}
       </div>
       <div>
-        <div className="font-ui text-sm font-medium text-foreground">
+        <div className="font-ui text-sm font-semibold text-foreground">
           {title}
         </div>
         <div className="font-ui text-[11px] text-muted-foreground">{body}</div>
@@ -419,7 +548,7 @@ function PerfDialog({ onChoose }: { onChoose: (m: "full" | "lite") => void }) {
       <div className="w-full max-w-sm rounded-2xl border border-white/[0.08] bg-card p-5 shadow-2xl">
         <div className="flex items-center gap-2">
           <Zap className="h-4 w-4 text-primary" />
-          <h2 className="font-display text-lg">Smoother experience?</h2>
+          <h2 className="font-display text-lg font-bold">Smoother experience?</h2>
         </div>
         <p className="mt-2 font-ui text-sm leading-relaxed text-muted-foreground">
           Your device seems to be working hard. Lite mode turns off gradients
