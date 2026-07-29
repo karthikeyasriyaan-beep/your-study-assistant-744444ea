@@ -25,7 +25,6 @@ import {
   Loader2,
   Trash2,
   MessageSquare,
-  ChevronDown,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useFocusTopic } from "@/lib/focus-topic-store";
@@ -62,7 +61,6 @@ export function AITutor() {
     if (uiLang !== "telugu") setLanguage(uiLang);
   }, [uiLang]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Ensure there is always an active conversation
   useEffect(() => {
     if (!activeId) {
       if (conversations.length > 0) setActive(conversations[0].id);
@@ -147,7 +145,6 @@ export function AITutor() {
         const { done, value } = await reader.read();
         if (done) break;
         acc += decoder.decode(value, { stream: true });
-        // Live update the assistant message
         updateConversation(active.id, {
           messages: [
             ...active.messages,
@@ -290,7 +287,7 @@ export function AITutor() {
 
       {/* ---------------- Center column ---------------- */}
       <div className="relative flex min-w-0 flex-1 flex-col">
-        {/* Top bar (mobile menu + context strip) */}
+        {/* Top bar */}
         <div className="sticky top-0 z-10 border-b border-white/[0.06] bg-background/70 backdrop-blur-xl">
           <div className="mx-auto flex max-w-3xl items-center gap-2 px-3 py-2.5 sm:px-6">
             <button
@@ -316,10 +313,8 @@ export function AITutor() {
                   msg={m}
                   streaming={streamingId === m.id && status === "streaming"}
                   onRegenerate={() => {
-                    // find prior user message
                     const prev = active.messages[idx - 1];
                     if (prev?.role === "user") {
-                      // trim from this assistant onward and resend
                       updateConversation(active.id, {
                         messages: active.messages.slice(0, idx - 1),
                       });
@@ -342,7 +337,6 @@ export function AITutor() {
         {/* Input dock */}
         <div className="sticky bottom-0 z-10 border-t border-white/[0.06] bg-background/80 backdrop-blur-xl">
           <div className="mx-auto max-w-3xl px-3 py-3 sm:px-6 sm:py-4">
-            {/* Quick action chips */}
             <div className="mb-2 -mx-1 flex gap-2 overflow-x-auto px-1 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {quickChips.map((c) => (
                 <button
@@ -479,7 +473,6 @@ function Sidebar({
 }) {
   return (
     <>
-      {/* Mobile scrim */}
       {open && (
         <button
           className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden"
@@ -578,7 +571,6 @@ function Sidebar({
           ))}
         </div>
 
-        {/* Language switcher */}
         <div className="border-t border-white/[0.06] p-3">
           <div className="mb-2 font-ui text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
             Language
@@ -689,7 +681,7 @@ function EmptyState({
 }
 
 // =============================================================
-// Message row
+// Message row (UPDATED for colored text & syntax support)
 // =============================================================
 function MessageRow({
   msg,
@@ -715,13 +707,56 @@ function MessageRow({
     );
   }
 
+  // Pre-process standard color names to CSS variables or HEX codes
+  const resolveColor = (name?: string) => {
+    if (!name) return "inherit";
+    const map: Record<string, string> = {
+      red: "#ef4444",
+      green: "#22c55e",
+      blue: "#3b82f6",
+      yellow: "#eab308",
+      orange: "#f97316",
+      purple: "#a855f7",
+      pink: "#ec4899",
+      cyan: "#06b6d4",
+    };
+    return map[name.toLowerCase()] || name;
+  };
+
   return (
     <div className="group animate-trk-fade-up">
-      <div className="max-w-none font-ui text-[15px] leading-relaxed text-foreground prose prose-invert prose-p:my-2 prose-headings:mt-4 prose-headings:mb-2 prose-headings:font-semibold prose-h2:text-xl prose-h3:text-base prose-strong:text-foreground prose-a:text-primary prose-code:text-primary prose-code:before:content-none prose-code:after:content-none prose-ul:my-2 prose-ol:my-2 prose-li:my-0.5">
+      <div className="max-w-none font-ui text-[15px] leading-relaxed text-foreground prose prose-invert prose-p:my-2 prose-headings:mt-4 prose-headings:mb-2 prose-headings:font-semibold prose-h2:text-xl prose-h3:text-base prose-strong:text-foreground prose-a:text-primary prose-ul:my-2 prose-ol:my-2 prose-li:my-0.5">
         <ReactMarkdown
           remarkPlugins={[remarkGfm, remarkMath]}
           rehypePlugins={[rehypeRaw, rehypeKatex]}
           components={{
+            // Handle standard raw inline CSS styles or colors
+            span: ({ node, style, className, children, ...props }) => {
+              return (
+                <span style={style} className={className} {...props}>
+                  {children}
+                </span>
+              );
+            },
+            // Custom <color name="red">Text</color> element handler
+            color: ({ name, children }: any) => (
+              <span style={{ color: resolveColor(name), fontWeight: 500 }}>
+                {children}
+              </span>
+            ),
+            // Custom <highlight color="yellow">Text</highlight> element handler
+            highlight: ({ color, children }: any) => (
+              <mark
+                style={{
+                  backgroundColor: resolveColor(color || "yellow") + "33",
+                  color: resolveColor(color || "yellow"),
+                  padding: "0.1em 0.3em",
+                  borderRadius: "0.25rem",
+                }}
+              >
+                {children}
+              </mark>
+            ),
             blockquote: ({ children }) => (
               <aside className="my-3 rounded-xl border border-primary/25 bg-primary/[0.06] px-4 py-3">
                 <div className="mb-1 font-ui text-[10px] uppercase tracking-[0.22em] text-primary/80">
@@ -735,16 +770,32 @@ function MessageRow({
                 {children}
               </ol>
             ),
-            li: ({ children, ...props }) => {
-              // Only style step markers when inside an ol (react-markdown does not pass parent context easily,
-              // but the ol above provides the border+numbering illusion).
+            li: ({ children, ...props }) => (
+              <li
+                {...props}
+                className="relative before:absolute before:-left-[27px] before:top-1 before:grid before:h-4 before:w-4 before:place-items-center before:rounded-full before:border before:border-primary/40 before:bg-background before:content-[''] marker:hidden"
+              >
+                {children}
+              </li>
+            ),
+            code: ({ inline, className, children, ...props }: any) => {
+              const match = /language-(\w+)/.exec(className || "");
+              if (!inline && match) {
+                return (
+                  <FormulaBlock>
+                    <code className={`language-${match[1]}`} {...props}>
+                      {children}
+                    </code>
+                  </FormulaBlock>
+                );
+              }
               return (
-                <li
+                <code
+                  className="rounded bg-white/[0.08] px-1.5 py-0.5 font-mono text-xs text-primary"
                   {...props}
-                  className="relative before:absolute before:-left-[27px] before:top-1 before:grid before:h-4 before:w-4 before:place-items-center before:rounded-full before:border before:border-primary/40 before:bg-background before:content-[''] marker:hidden"
                 >
                   {children}
-                </li>
+                </code>
               );
             },
             pre: ({ children }) => (
@@ -834,30 +885,32 @@ function CopyButton({ text }: { text: string }) {
 function FormulaBlock({ children }: { children: React.ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
   const [copied, setCopied] = useState(false);
+
   return (
     <div className="group/f relative my-3 overflow-hidden rounded-xl border border-white/[0.08] bg-black/40">
-      <div ref={ref} className="overflow-x-auto px-5 py-3 text-center font-mono text-sm text-foreground">
+      <div className="flex items-center justify-between border-b border-white/[0.06] bg-white/[0.02] px-4 py-1.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+        <span>Code / Formula</span>
+        <button
+          type="button"
+          onClick={async () => {
+            if (!ref.current) return;
+            try {
+              await navigator.clipboard.writeText(ref.current.innerText);
+              setCopied(true);
+              setTimeout(() => setCopied(false), 1200);
+            } catch {
+              toast.error("Couldn't copy block");
+            }
+          }}
+          className="flex items-center gap-1 hover:text-foreground"
+        >
+          {copied ? <Check className="h-3 w-3 text-primary" /> : <Copy className="h-3 w-3" />}
+          {copied ? "Copied" : "Copy"}
+        </button>
+      </div>
+      <div ref={ref} className="overflow-x-auto px-5 py-3 font-mono text-sm text-foreground">
         {children}
       </div>
-      <button
-        type="button"
-        aria-label="Copy formula"
-        onClick={async () => {
-          try {
-            await navigator.clipboard.writeText(ref.current?.innerText.trim() ?? "");
-            setCopied(true);
-            setTimeout(() => setCopied(false), 1200);
-          } catch {
-            /* noop */
-          }
-        }}
-        className="absolute right-1.5 top-1.5 grid h-7 w-7 place-items-center rounded-md text-muted-foreground opacity-0 transition hover:bg-white/[0.06] hover:text-foreground group-hover/f:opacity-100 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
-      >
-        {copied ? <Check className="h-3.5 w-3.5 text-primary" /> : <Copy className="h-3.5 w-3.5" />}
-      </button>
     </div>
   );
 }
-
-// Unused imports kept for possible future controls
-void ChevronDown;
