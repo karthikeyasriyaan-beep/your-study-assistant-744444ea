@@ -730,6 +730,8 @@ function MessageRow({
           remarkPlugins={[remarkGfm, remarkMath]}
           rehypePlugins={[rehypeRaw, rehypeKatex]}
           components={{
+            /* eslint-disable @typescript-eslint/no-explicit-any */
+            ...({} as any),
             // Handle standard raw inline CSS styles or colors
             span: ({ node, style, className, children, ...props }) => {
               return (
