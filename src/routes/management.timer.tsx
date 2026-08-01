@@ -26,6 +26,11 @@ import { addXP } from "@/lib/profile-store";
 import { setFocusTopic } from "@/lib/focus-topic-store";
 
 export const Route = createFileRoute("/management/timer")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    class: typeof search['class'] === "string" ? (search['class'] as string) : undefined,
+    subject: typeof search['subject'] === "string" ? (search['subject'] as string) : undefined,
+    chapter: typeof search['chapter'] === "string" ? (search['chapter'] as string) : undefined,
+  }),
   component: FocusTimer,
   ssr: false,
 });
@@ -111,22 +116,36 @@ type AlertTone = "info" | "warning" | "success";
 type DiagAlert = { id: string; message: string; type: AlertTone };
 
 function FocusTimer() {
+  const search = Route.useSearch();
   // Config
-  const [selectedClass, setSelectedClass] = useState("10");
-  const [selectedSubject, setSelectedSubject] = useState("Physical Science");
-  const [selectedChapter, setSelectedChapter] = useState("");
+  const [selectedClass, setSelectedClass] = useState(search.class ?? "10");
+  const [selectedSubject, setSelectedSubject] = useState(
+    search.subject ?? "Physical Science",
+  );
+  const [selectedChapter, setSelectedChapter] = useState(search.chapter ?? "");
   const [selectedPreset, setSelectedPreset] = useState<PresetOption>(PRESETS[0]);
 
   const isStrictSimulation = !!selectedPreset.strict;
 
-  const availableSubjects = useMemo(
-    () => Object.keys(SYLLABUS_CHAPTERS[selectedClass] ?? {}),
-    [selectedClass],
-  );
-  const availableChapters = useMemo(
-    () => SYLLABUS_CHAPTERS[selectedClass]?.[selectedSubject] ?? [],
-    [selectedClass, selectedSubject],
-  );
+  const availableSubjects = useMemo(() => {
+    const base = Object.keys(SYLLABUS_CHAPTERS[selectedClass] ?? {});
+    // a subject arriving from the materials deep-link may not be in the map
+    if (search.subject && !base.includes(search.subject)) {
+      return [search.subject, ...base];
+    }
+    return base;
+  }, [selectedClass, search.subject]);
+  const availableChapters = useMemo(() => {
+    const base = SYLLABUS_CHAPTERS[selectedClass]?.[selectedSubject] ?? [];
+    if (
+      search.chapter &&
+      search.subject === selectedSubject &&
+      !base.includes(search.chapter)
+    ) {
+      return [search.chapter, ...base];
+    }
+    return base;
+  }, [selectedClass, selectedSubject, search.chapter, search.subject]);
 
   useEffect(() => {
     if (!availableSubjects.includes(selectedSubject)) {
@@ -135,7 +154,11 @@ function FocusTimer() {
   }, [availableSubjects, selectedSubject]);
 
   useEffect(() => {
-    setSelectedChapter(availableChapters[0] ?? "");
+    setSelectedChapter((prev: string) =>
+      prev && availableChapters.includes(prev)
+        ? prev
+        : (availableChapters[0] ?? ""),
+    );
   }, [availableChapters]);
 
   // Timer state

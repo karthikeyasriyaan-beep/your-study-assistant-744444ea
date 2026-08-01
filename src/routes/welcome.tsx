@@ -32,6 +32,20 @@ export const Route = createFileRoute("/welcome")({
         content: "One tab. Every doubt, answered — right where you're reading.",
       },
     ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: FAQS.map((f) => ({
+            "@type": "Question",
+            name: f.q,
+            acceptedAnswer: { "@type": "Answer", text: f.a },
+          })),
+        }),
+      },
+    ],
   }),
   component: Welcome,
   ssr: false,
@@ -448,6 +462,27 @@ function Welcome() {
 
       <SectionDivider />
 
+      {/* FAQ */}
+      <section className="mx-auto w-full max-w-3xl px-6 py-20 lg:py-24">
+        <Reveal className="text-center">
+          <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-primary">
+            FAQ
+          </div>
+          <h2 className="mt-2 font-display text-3xl font-bold tracking-tight sm:text-4xl">
+            Questions students actually ask.
+          </h2>
+        </Reveal>
+        <div className="mt-8 space-y-2.5">
+          {FAQS.map((f, i) => (
+            <Reveal key={f.q} delay={i * 60}>
+              <FaqItem q={f.q} a={f.a} />
+            </Reveal>
+          ))}
+        </div>
+      </section>
+
+      <SectionDivider />
+
       {/* FINAL CTA */}
       <section className="mx-auto w-full max-w-3xl px-6 py-24 text-center">
         <Reveal>
@@ -482,6 +517,56 @@ function SectionDivider() {
     <div className="mx-auto w-full max-w-6xl px-6">
       <div className="h-px w-full bg-gradient-to-r from-transparent via-white/[0.08] to-transparent" />
     </div>
+  );
+}
+
+const FAQS: { q: string; a: string }[] = [
+  {
+    q: "How does Stutora actually help me study?",
+    a: "You pick a chapter from your class syllabus, read it inside Stutora, and ask the AI tutor about anything confusing — it answers using the chapter you're on. A focus timer logs the time, and quick quizzes check whether it stuck. One place instead of five tabs.",
+  },
+  {
+    q: "Why should I choose Stutora over YouTube or a normal AI chatbot?",
+    a: "A chatbot doesn't know what you're studying. Stutora does — your active focus subject and chapter are sent with every question, so 'explain this' just works. It's also built around the Telangana board and NCERT syllabus, not generic content.",
+  },
+  {
+    q: "Which classes and boards are covered?",
+    a: "Classes 6 to 10 on the Telangana State Board (SCERT), plus Intermediate MPC and BiPC. Chapters are NCERT aligned, so most CBSE topics map across too.",
+  },
+  {
+    q: "Do I need to pay or sign up?",
+    a: "No. You can open a chapter, ask the tutor, run the focus timer and take quizzes without creating an account. Nothing is locked behind a paywall.",
+  },
+  {
+    q: "Can it explain in Telugu or Hindi?",
+    a: "Yes. The AI tutor has a language switcher for English, Telugu and Hindi, so you can get the same explanation in whichever one is clearer for you.",
+  },
+  {
+    q: "How does the focus timer know what I'm studying?",
+    a: "Open any chapter and tap 'Focus on this chapter' — the timer opens with that class, subject and chapter pre-selected. Starting the session sets it as your active focus, and the dashboard, tutor and quizzes all follow it.",
+  },
+  {
+    q: "Is my study data saved?",
+    a: "Your sessions, focus topic and chat history are stored on your own device, so your history stays with you and nothing personal leaves the app.",
+  },
+];
+
+function FaqItem({ q, a }: { q: string; a: string }) {
+  return (
+    <details className="group rounded-2xl border border-white/[0.08] bg-white/[0.02] px-5 py-4 backdrop-blur transition-colors hover:border-primary/30">
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-ui text-sm font-semibold text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-0">
+        {q}
+        <span
+          aria-hidden
+          className="grid h-6 w-6 shrink-0 place-items-center rounded-full border border-white/[0.1] text-muted-foreground transition-transform duration-300 group-open:rotate-45 motion-reduce:transition-none"
+        >
+          +
+        </span>
+      </summary>
+      <p className="mt-3 font-ui text-[13.5px] leading-relaxed text-muted-foreground">
+        {a}
+      </p>
+    </details>
   );
 }
 
