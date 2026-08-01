@@ -154,7 +154,7 @@ function FocusTimer() {
   }, [availableSubjects, selectedSubject]);
 
   useEffect(() => {
-    setSelectedChapter((prev) =>
+    setSelectedChapter((prev: string) =>
       prev && availableChapters.includes(prev)
         ? prev
         : (availableChapters[0] ?? ""),
