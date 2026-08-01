@@ -556,14 +556,6 @@ function FaqItem({ q, a }: { q: string; a: string }) {
   );
 }
 
-function SectionDividerUnused() {
-  return (
-    <div className="mx-auto w-full max-w-6xl px-6">
-      <div className="h-px w-full bg-gradient-to-r from-transparent via-white/[0.08] to-transparent" />
-    </div>
-  );
-}
-
 function FeatureCard({
   icon: Icon,
   title,
