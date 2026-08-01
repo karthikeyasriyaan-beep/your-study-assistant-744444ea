@@ -450,6 +450,7 @@ function Welcome() {
 
       {/* FINAL CTA */}
       <section className="mx-auto w-full max-w-3xl px-6 py-24 text-center">
+        {null}
         <Reveal>
           <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
             Open your first chapter.
