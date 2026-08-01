@@ -448,9 +448,29 @@ function Welcome() {
 
       <SectionDivider />
 
+      {/* FAQ */}
+      <section className="mx-auto w-full max-w-3xl px-6 py-20 lg:py-24">
+        <Reveal className="text-center">
+          <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-primary">
+            FAQ
+          </div>
+          <h2 className="mt-2 font-display text-3xl font-bold tracking-tight sm:text-4xl">
+            Questions students actually ask.
+          </h2>
+        </Reveal>
+        <div className="mt-8 space-y-2.5">
+          {FAQS.map((f, i) => (
+            <Reveal key={f.q} delay={i * 60}>
+              <FaqItem q={f.q} a={f.a} />
+            </Reveal>
+          ))}
+        </div>
+      </section>
+
+      <SectionDivider />
+
       {/* FINAL CTA */}
       <section className="mx-auto w-full max-w-3xl px-6 py-24 text-center">
-        {null}
         <Reveal>
           <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
             Open your first chapter.
