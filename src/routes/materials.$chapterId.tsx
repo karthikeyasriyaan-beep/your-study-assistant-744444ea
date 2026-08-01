@@ -72,14 +72,19 @@ function ChapterView() {
 
       <div className="mb-4 flex flex-wrap items-center gap-2 rounded-lg border bg-muted/40 px-3 py-2 text-xs">
         <span className="text-muted-foreground">
-          Want to focus on this chapter? Pick the class, subject, and chapter
-          manually in the timer.
+          Want to focus on this chapter? Open the timer with this chapter
+          pre-selected — you can still change it there.
         </span>
         <Link
           to="/management/timer"
+          search={{
+            class: classLevel.name.replace(/[^0-9]/g, "") || undefined,
+            subject: subject.name,
+            chapter: chapter.title,
+          }}
           className="ml-auto font-semibold text-primary underline-offset-2 hover:underline"
         >
-          Open timer →
+          Focus on this chapter →
         </Link>
       </div>
 
