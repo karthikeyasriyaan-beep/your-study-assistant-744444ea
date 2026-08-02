@@ -136,6 +136,7 @@ function ActiveFocusCard({ focus }: { focus: ReturnType<typeof useFocusTopic> })
         <div className="mt-4 flex flex-wrap gap-2">
           <Link
             to="/management/timer"
+            search={{}}
             className="inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 font-ui text-xs font-semibold text-primary-foreground shadow-md shadow-primary/25 transition active:scale-95"
           >
             <Timer className="h-3.5 w-3.5" /> Start timer
