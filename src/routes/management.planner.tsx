@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { CalendarClock, ShieldCheck } from "lucide-react";
+import { CalendarClock, Save, ShieldCheck } from "lucide-react";
+import { toast } from "sonner";
 import { EXAM_SYLLABI, getSyllabus } from "@/lib/exam-syllabus";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -140,6 +141,13 @@ function PlannerPage() {
   const reset = () => {
     savePlan(null);
     setPlan(null);
+    toast.success("Plan cleared");
+  };
+
+  const save = () => {
+    if (!plan) return;
+    savePlan(plan);
+    toast.success("Plan saved on this device");
   };
 
   return (
@@ -172,9 +180,14 @@ function PlannerPage() {
             />
           </div>
           {plan ? (
-            <Button variant="outline" onClick={reset}>
-              Reset plan
-            </Button>
+            <div className="flex gap-2">
+              <Button onClick={save}>
+                <Save className="mr-2 h-4 w-4" /> Save plan
+              </Button>
+              <Button variant="outline" onClick={reset}>
+                Reset
+              </Button>
+            </div>
           ) : (
             <Button onClick={create}>
               <CalendarClock className="mr-2 h-4 w-4" /> Build plan
