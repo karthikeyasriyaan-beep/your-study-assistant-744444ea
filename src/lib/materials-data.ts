@@ -30,11 +30,15 @@ export interface ClassNode {
   subjects: SubjectNode[];
 }
 
-const scert = (path: string) =>
-  `https://scert.telangana.gov.in/${path.replace(/^\/+/, "")}`;
+// SCERT's own PDF host is frequently unreachable, so every textbook link now
+// resolves through Scribd, which mirrors the Telangana State Syllabus books.
+const scribd = (terms: string) =>
+  `https://www.scribd.com/search?query=${encodeURIComponent(
+    `Telangana ${terms}`.replace(/[—–]/g, " ").replace(/\s+/g, " ").trim(),
+  )}`;
 
-const SOURCE = "SCERT Telangana";
-const SOURCE_SEARCH = "Google → SCERT PDF";
+const SOURCE = "Scribd";
+const SOURCE_SEARCH = "Scribd";
 
 function tsBook(
   id: string,
@@ -43,12 +47,13 @@ function tsBook(
   tags: string[] = ["Telangana State Syllabus"],
   note?: string,
 ): ChapterNode {
+  void pdfPath;
   return {
     id,
     title,
     note,
     competitiveTags: tags,
-    pdfUrl: scert(pdfPath),
+    pdfUrl: scribd(`${title} textbook`),
     sourceLabel: SOURCE,
   };
 }
@@ -60,15 +65,12 @@ function tsSearchBook(
   tags: string[] = ["Telangana State Syllabus"],
   note?: string,
 ): ChapterNode {
-  const q = encodeURIComponent(
-    `site:scert.telangana.gov.in ${searchTerms} filetype:pdf`,
-  );
   return {
     id,
     title,
     note,
     competitiveTags: tags,
-    pdfUrl: `https://www.google.com/search?q=${q}`,
+    pdfUrl: scribd(`${searchTerms} textbook`),
     sourceLabel: SOURCE_SEARCH,
   };
 }
