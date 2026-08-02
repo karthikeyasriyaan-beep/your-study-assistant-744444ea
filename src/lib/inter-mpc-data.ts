@@ -56,11 +56,14 @@ function slugFor(year: InterYear, subject: MPCSubject): string {
   return `inter_${y}_${sMap[subject]}`;
 }
 
-function googleSearchPdf(...terms: string[]): string {
+function scribdSearch(...terms: string[]): string {
   const q = encodeURIComponent(
-    `TSBIE Telangana Intermediate ${terms.join(" ")} textbook pdf`,
+    `Telangana Intermediate ${terms.join(" ")} textbook`
+      .replace(/[—–]/g, " ")
+      .replace(/ +/g, " ")
+      .trim(),
   );
-  return `https://www.google.com/search?q=${q}`;
+  return `https://www.scribd.com/search?query=${q}`;
 }
 
 function buildBook(
@@ -85,7 +88,7 @@ function buildBook(
     chapters: titles.map((t, i) => ({
       number: i + 1,
       title: t,
-      pdfUrl: googleSearchPdf(year, subject, medium, t),
+      pdfUrl: scribdSearch(year, subject, medium, t),
     })),
   };
 }
