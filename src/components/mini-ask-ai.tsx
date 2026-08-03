@@ -128,7 +128,7 @@ export function MiniAskAI() {
                   </span>
                 ) : m.role === "assistant" ? (
                   <div
-                    className="prose prose-sm max-w-none [&_span]:!leading-relaxed"
+                    className="prose prose-sm prose-invert max-w-none [&_span]:!leading-relaxed [&_u]:font-medium [&_u]:text-foreground [&_u]:underline [&_u]:decoration-primary [&_u]:decoration-2 [&_u]:underline-offset-4 [&_mark]:rounded [&_mark]:bg-primary/15 [&_mark]:px-1 [&_mark]:text-foreground"
                     dangerouslySetInnerHTML={{ __html: m.text }}
                   />
                 ) : (
