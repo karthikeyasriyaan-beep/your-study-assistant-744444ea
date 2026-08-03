@@ -747,6 +747,11 @@ function MessageRow({
               </span>
             ),
             // Custom <highlight color="yellow">Text</highlight> element handler
+            u: ({ children }) => (
+              <span className="font-medium text-foreground underline decoration-primary decoration-2 underline-offset-4">
+                {children}
+              </span>
+            ),
             highlight: ({ color, children }: any) => (
               <mark
                 style={{
