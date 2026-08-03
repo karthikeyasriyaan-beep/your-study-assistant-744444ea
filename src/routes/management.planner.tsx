@@ -15,6 +15,7 @@ export const Route = createFileRoute("/management/planner")({
 });
 
 const STORAGE_KEY = "planner:v1";
+const LIBRARY_KEY = "planner:library:v1";
 const BUFFER_RATIO = 0.15;
 const MS_PER_DAY = 86_400_000;
 
@@ -25,6 +26,8 @@ type Plan = {
   weeks: { label: string; range: string; chapters: string[]; revision: boolean }[];
   checks: Record<string, boolean>;
 };
+
+type SavedPlan = { id: string; name: string; savedAt: string; plan: Plan };
 
 function loadPlan(): Plan | null {
   if (typeof window === "undefined") return null;
@@ -38,6 +41,20 @@ function savePlan(p: Plan | null) {
   if (typeof window === "undefined") return;
   if (!p) window.localStorage.removeItem(STORAGE_KEY);
   else window.localStorage.setItem(STORAGE_KEY, JSON.stringify(p));
+}
+
+function loadLibrary(): SavedPlan[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = JSON.parse(window.localStorage.getItem(LIBRARY_KEY) || "[]");
+    return Array.isArray(raw) ? (raw as SavedPlan[]) : [];
+  } catch {
+    return [];
+  }
+}
+function writeLibrary(list: SavedPlan[]) {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(LIBRARY_KEY, JSON.stringify(list));
 }
 
 function buildPlan(examId: string, deadline: string): Plan | null {
