@@ -44,7 +44,7 @@ export const CBSE_VAULT: CbseClass[] = [
       {
         id: "maths",
         name: "Mathematics",
-        books: [b("c6-math", "Ganita Prakash (Maths)", "femh1", 10)],
+        books: [b("c6-math", "Ganita Prakash (Maths)", "fegp1", 10)],
       },
       {
         id: "science",
@@ -54,12 +54,12 @@ export const CBSE_VAULT: CbseClass[] = [
       {
         id: "english",
         name: "English",
-        books: [b("c6-eng", "Poorvi (English)", "fepo1", 12)],
+        books: [b("c6-eng", "Poorvi (English)", "fepr1", 5)],
       },
       {
         id: "sst",
         name: "Social Science",
-        books: [b("c6-sst", "Exploring Society: India and Beyond", "fess1", 14)],
+        books: [b("c6-sst", "Exploring Society: India and Beyond", "fees1", 14)],
       },
     ],
   },
@@ -70,7 +70,7 @@ export const CBSE_VAULT: CbseClass[] = [
       {
         id: "maths",
         name: "Mathematics",
-        books: [b("c7-math", "Ganita Prakash (Maths)", "gemh1", 9)],
+        books: [b("c7-math", "Ganita Prakash Part I (Maths)", "gegp1", 8)],
       },
       {
         id: "science",
@@ -80,12 +80,12 @@ export const CBSE_VAULT: CbseClass[] = [
       {
         id: "english",
         name: "English",
-        books: [b("c7-eng", "Poorvi (English)", "gepo1", 10)],
+        books: [b("c7-eng", "Poorvi (English)", "gepr1", 5)],
       },
       {
         id: "sst",
         name: "Social Science",
-        books: [b("c7-sst", "Exploring Society: India and Beyond", "gess1", 12)],
+        books: [b("c7-sst", "Exploring Society: India and Beyond Part I", "gees1", 12)],
       },
     ],
   },
@@ -106,15 +106,15 @@ export const CBSE_VAULT: CbseClass[] = [
       {
         id: "english",
         name: "English",
-        books: [b("c8-eng", "Honeydew (English)", "hehd1", 10)],
+        books: [b("c8-eng", "Honeydew (English)", "hehd1", 8)],
       },
       {
         id: "sst",
         name: "Social Science",
         books: [
-          b("c8-hist", "Our Pasts III (History)", "hess3", 10),
-          b("c8-geo", "Resources and Development (Geography)", "hess4", 6),
-          b("c8-civ", "Social and Political Life III", "hess5", 10),
+          b("c8-hist", "Our Pasts III (History)", "hess2", 8),
+          b("c8-geo", "Resources and Development (Geography)", "hess4", 5),
+          b("c8-civ", "Social and Political Life III", "hess3", 8),
         ],
       },
     ],
@@ -126,29 +126,28 @@ export const CBSE_VAULT: CbseClass[] = [
       {
         id: "maths",
         name: "Mathematics",
-        books: [b("c9-math", "Mathematics", "iemh1", 12)],
+        books: [b("c9-math", "Mathematics", "iemh1", 8)],
       },
       {
         id: "science",
         name: "Science",
-        books: [b("c9-sci", "Science", "iesc1", 12)],
+        books: [b("c9-sci", "Science", "iesc1", 13)],
       },
       {
         id: "english",
         name: "English",
         books: [
-          b("c9-beehive", "Beehive (English)", "iebe1", 10),
-          b("c9-moments", "Moments (Supplementary)", "iemo1", 10),
+          b("c9-beehive", "Beehive (English)", "iebe1", 8),
+          b("c9-moments", "Moments (Supplementary)", "iemo1", 9),
         ],
       },
       {
         id: "sst",
         name: "Social Science",
         books: [
-          b("c9-hist", "India and the Contemporary World I", "iess1", 5),
-          b("c9-geo", "Contemporary India I (Geography)", "iess2", 6),
-          b("c9-pol", "Democratic Politics I", "iess3", 5),
-          b("c9-eco", "Economics", "iess4", 4),
+          b("c9-hist", "India and the Contemporary World I", "iess3", 6),
+          b("c9-geo", "Contemporary India I (Geography)", "iess1", 4),
+          b("c9-eco", "Economics", "iess2", 5),
         ],
       },
     ],
@@ -171,8 +170,8 @@ export const CBSE_VAULT: CbseClass[] = [
         id: "english",
         name: "English",
         books: [
-          b("c10-first", "First Flight (English)", "jeff1", 11),
-          b("c10-foot", "Footprints Without Feet", "jefp1", 10),
+          b("c10-first", "First Flight (English)", "jeff1", 9),
+          b("c10-foot", "Footprints Without Feet", "jefp1", 9),
         ],
       },
       {
@@ -180,8 +179,8 @@ export const CBSE_VAULT: CbseClass[] = [
         name: "Social Science",
         books: [
           b("c10-hist", "India and the Contemporary World II", "jess3", 5),
-          b("c10-geo", "Contemporary India II (Geography)", "jess4", 7),
-          b("c10-pol", "Democratic Politics II", "jess1", 8),
+          b("c10-geo", "Contemporary India II (Geography)", "jess1", 7),
+          b("c10-pol", "Democratic Politics II", "jess4", 5),
           b("c10-eco", "Understanding Economic Development", "jess2", 5),
         ],
       },
@@ -200,7 +199,7 @@ export const CBSE_VAULT: CbseClass[] = [
         id: "physics",
         name: "Physics",
         books: [
-          b("c11-phy1", "Physics Part I", "keph1", 8),
+          b("c11-phy1", "Physics Part I", "keph1", 7),
           b("c11-phy2", "Physics Part II", "keph2", 7),
         ],
       },
@@ -209,7 +208,7 @@ export const CBSE_VAULT: CbseClass[] = [
         name: "Chemistry",
         books: [
           b("c11-chem1", "Chemistry Part I", "kech1", 6),
-          b("c11-chem2", "Chemistry Part II", "kech2", 4),
+          b("c11-chem2", "Chemistry Part II", "kech2", 3),
         ],
       },
       {

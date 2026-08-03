@@ -48,6 +48,8 @@ When emphasizing crucial terms, formulas, key takeaways, or specific parts of a 
 - Highlight tags: <highlight color="yellow">highlighted text</highlight>
 - Inline HTML spans: <span style="color: #22c55e;">green text</span>
 - LaTeX math color: $\\textcolor{red}{E = mc^2}$ or $\\textcolor{#ef4444}{\\text{Red Text}}$
+- Underline the single most important term or phrase of a definition with <u>term</u> so the eye lands on it (use it sparingly — one or two per answer).
+- Prefer this rhythm: plain readable prose, with the key term <u>underlined</u> and the one crucial takeaway wrapped in <highlight color="green">…</highlight>. Never colour whole paragraphs.
 
 LANGUAGE:
 - If the requested language is "hindi", reply entirely in clear Hindi (Devanagari).
