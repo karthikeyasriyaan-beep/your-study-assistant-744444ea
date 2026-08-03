@@ -15,6 +15,7 @@ export const Route = createFileRoute("/management/planner")({
 });
 
 const STORAGE_KEY = "planner:v1";
+const LIBRARY_KEY = "planner:library:v1";
 const BUFFER_RATIO = 0.15;
 const MS_PER_DAY = 86_400_000;
 
@@ -25,6 +26,8 @@ type Plan = {
   weeks: { label: string; range: string; chapters: string[]; revision: boolean }[];
   checks: Record<string, boolean>;
 };
+
+type SavedPlan = { id: string; name: string; savedAt: string; plan: Plan };
 
 function loadPlan(): Plan | null {
   if (typeof window === "undefined") return null;
@@ -38,6 +41,20 @@ function savePlan(p: Plan | null) {
   if (typeof window === "undefined") return;
   if (!p) window.localStorage.removeItem(STORAGE_KEY);
   else window.localStorage.setItem(STORAGE_KEY, JSON.stringify(p));
+}
+
+function loadLibrary(): SavedPlan[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = JSON.parse(window.localStorage.getItem(LIBRARY_KEY) || "[]");
+    return Array.isArray(raw) ? (raw as SavedPlan[]) : [];
+  } catch {
+    return [];
+  }
+}
+function writeLibrary(list: SavedPlan[]) {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(LIBRARY_KEY, JSON.stringify(list));
 }
 
 function buildPlan(examId: string, deadline: string): Plan | null {
@@ -103,6 +120,8 @@ function PlannerPage() {
     return d.toISOString().slice(0, 10);
   });
   const [plan, setPlan] = useState<Plan | null>(null);
+  const [library, setLibrary] = useState<SavedPlan[]>([]);
+  const [selectedSaved, setSelectedSaved] = useState("");
 
   useEffect(() => {
     const p = loadPlan();
@@ -111,6 +130,7 @@ function PlannerPage() {
       setExamId(p.examId);
       setDeadline(p.deadline);
     }
+    setLibrary(loadLibrary());
   }, []);
 
   const stats = useMemo(() => {
@@ -147,11 +167,69 @@ function PlannerPage() {
   const save = () => {
     if (!plan) return;
     savePlan(plan);
-    toast.success("Plan saved on this device");
+    const exam = getSyllabus(plan.examId)?.name ?? plan.examId;
+    const entry: SavedPlan = {
+      id: `${Date.now()}`,
+      name: `${exam} → ${plan.deadline}`,
+      savedAt: new Date().toISOString(),
+      plan,
+    };
+    const next = [entry, ...library.filter((s) => s.name !== entry.name)].slice(0, 20);
+    setLibrary(next);
+    writeLibrary(next);
+    setSelectedSaved(entry.id);
+    toast.success("Plan saved to your library");
+  };
+
+  const loadSaved = (id: string) => {
+    const found = library.find((s) => s.id === id);
+    if (!found) return;
+    setSelectedSaved(id);
+    setPlan(found.plan);
+    setExamId(found.plan.examId);
+    setDeadline(found.plan.deadline);
+    savePlan(found.plan);
+    toast.success(`Loaded "${found.name}"`);
+  };
+
+  const deleteSaved = () => {
+    if (!selectedSaved) return;
+    const next = library.filter((s) => s.id !== selectedSaved);
+    setLibrary(next);
+    writeLibrary(next);
+    setSelectedSaved("");
+    toast.success("Saved plan removed");
   };
 
   return (
     <div className="space-y-6">
+      {library.length > 0 && (
+        <div className="rounded-xl border bg-card p-4">
+          <Label className="text-xs">Saved plans</Label>
+          <div className="mt-1 flex flex-wrap items-center gap-2">
+            <select
+              value={selectedSaved}
+              onChange={(e) => loadSaved(e.target.value)}
+              className="min-w-[220px] flex-1 rounded-md border bg-background px-3 py-2 text-sm"
+            >
+              <option value="">Load a previously saved plan…</option>
+              {library.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.name} · saved {new Date(s.savedAt).toLocaleDateString()}
+                </option>
+              ))}
+            </select>
+            <Button
+              variant="outline"
+              onClick={deleteSaved}
+              disabled={!selectedSaved}
+            >
+              Delete
+            </Button>
+          </div>
+        </div>
+      )}
+
       <div className="rounded-xl border bg-card p-5">
         <div className="grid gap-4 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
           <div>

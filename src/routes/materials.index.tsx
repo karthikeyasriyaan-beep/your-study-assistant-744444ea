@@ -97,6 +97,25 @@ function MaterialsIndex() {
               </p>
             </div>
           </Link>
+          <Link
+            to="/materials/cbse"
+            className="flex items-center gap-3 rounded-xl border border-sky-500/40 bg-sky-500/5 p-4 transition hover:border-sky-500 hover:shadow-sm sm:col-span-2"
+          >
+            <div className="shrink-0 rounded-lg bg-sky-500/15 p-2 text-sky-600 dark:text-sky-400">
+              <GraduationCap className="h-5 w-5" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2">
+                <h3 className="truncate text-sm font-semibold">
+                  CBSE — NCERT Textbooks
+                </h3>
+                <ChevronRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+              </div>
+              <p className="mt-0.5 text-xs text-muted-foreground">
+                Class 6–12 · Maths · Science · English · Social · PCB · official NCERT links
+              </p>
+            </div>
+          </Link>
         </div>
       </div>
 

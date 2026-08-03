@@ -20,6 +20,7 @@ import { Route as ProductivityQuizRouteImport } from './routes/productivity.quiz
 import { Route as ProductivityFlashcardsRouteImport } from './routes/productivity.flashcards'
 import { Route as MaterialsInterMpcRouteImport } from './routes/materials.inter-mpc'
 import { Route as MaterialsInterBipcRouteImport } from './routes/materials.inter-bipc'
+import { Route as MaterialsCbseRouteImport } from './routes/materials.cbse'
 import { Route as MaterialsChapterIdRouteImport } from './routes/materials.$chapterId'
 import { Route as ManagementTimerRouteImport } from './routes/management.timer'
 import { Route as ManagementPlannerRouteImport } from './routes/management.planner'
@@ -81,6 +82,11 @@ const MaterialsInterBipcRoute = MaterialsInterBipcRouteImport.update({
   path: '/inter-bipc',
   getParentRoute: () => MaterialsRoute,
 } as any)
+const MaterialsCbseRoute = MaterialsCbseRouteImport.update({
+  id: '/cbse',
+  path: '/cbse',
+  getParentRoute: () => MaterialsRoute,
+} as any)
 const MaterialsChapterIdRoute = MaterialsChapterIdRouteImport.update({
   id: '/$chapterId',
   path: '/$chapterId',
@@ -119,6 +125,7 @@ export interface FileRoutesByFullPath {
   '/management/planner': typeof ManagementPlannerRoute
   '/management/timer': typeof ManagementTimerRoute
   '/materials/$chapterId': typeof MaterialsChapterIdRoute
+  '/materials/cbse': typeof MaterialsCbseRoute
   '/materials/inter-bipc': typeof MaterialsInterBipcRoute
   '/materials/inter-mpc': typeof MaterialsInterMpcRoute
   '/productivity/flashcards': typeof ProductivityFlashcardsRoute
@@ -136,6 +143,7 @@ export interface FileRoutesByTo {
   '/management/planner': typeof ManagementPlannerRoute
   '/management/timer': typeof ManagementTimerRoute
   '/materials/$chapterId': typeof MaterialsChapterIdRoute
+  '/materials/cbse': typeof MaterialsCbseRoute
   '/materials/inter-bipc': typeof MaterialsInterBipcRoute
   '/materials/inter-mpc': typeof MaterialsInterMpcRoute
   '/productivity/flashcards': typeof ProductivityFlashcardsRoute
@@ -155,6 +163,7 @@ export interface FileRoutesById {
   '/management/planner': typeof ManagementPlannerRoute
   '/management/timer': typeof ManagementTimerRoute
   '/materials/$chapterId': typeof MaterialsChapterIdRoute
+  '/materials/cbse': typeof MaterialsCbseRoute
   '/materials/inter-bipc': typeof MaterialsInterBipcRoute
   '/materials/inter-mpc': typeof MaterialsInterMpcRoute
   '/productivity/flashcards': typeof ProductivityFlashcardsRoute
@@ -175,6 +184,7 @@ export interface FileRouteTypes {
     | '/management/planner'
     | '/management/timer'
     | '/materials/$chapterId'
+    | '/materials/cbse'
     | '/materials/inter-bipc'
     | '/materials/inter-mpc'
     | '/productivity/flashcards'
@@ -192,6 +202,7 @@ export interface FileRouteTypes {
     | '/management/planner'
     | '/management/timer'
     | '/materials/$chapterId'
+    | '/materials/cbse'
     | '/materials/inter-bipc'
     | '/materials/inter-mpc'
     | '/productivity/flashcards'
@@ -210,6 +221,7 @@ export interface FileRouteTypes {
     | '/management/planner'
     | '/management/timer'
     | '/materials/$chapterId'
+    | '/materials/cbse'
     | '/materials/inter-bipc'
     | '/materials/inter-mpc'
     | '/productivity/flashcards'
@@ -306,6 +318,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MaterialsInterBipcRouteImport
       parentRoute: typeof MaterialsRoute
     }
+    '/materials/cbse': {
+      id: '/materials/cbse'
+      path: '/cbse'
+      fullPath: '/materials/cbse'
+      preLoaderRoute: typeof MaterialsCbseRouteImport
+      parentRoute: typeof MaterialsRoute
+    }
     '/materials/$chapterId': {
       id: '/materials/$chapterId'
       path: '/$chapterId'
@@ -362,6 +381,7 @@ const ManagementRouteWithChildren = ManagementRoute._addFileChildren(
 
 interface MaterialsRouteChildren {
   MaterialsChapterIdRoute: typeof MaterialsChapterIdRoute
+  MaterialsCbseRoute: typeof MaterialsCbseRoute
   MaterialsInterBipcRoute: typeof MaterialsInterBipcRoute
   MaterialsInterMpcRoute: typeof MaterialsInterMpcRoute
   MaterialsIndexRoute: typeof MaterialsIndexRoute
@@ -369,6 +389,7 @@ interface MaterialsRouteChildren {
 
 const MaterialsRouteChildren: MaterialsRouteChildren = {
   MaterialsChapterIdRoute: MaterialsChapterIdRoute,
+  MaterialsCbseRoute: MaterialsCbseRoute,
   MaterialsInterBipcRoute: MaterialsInterBipcRoute,
   MaterialsInterMpcRoute: MaterialsInterMpcRoute,
   MaterialsIndexRoute: MaterialsIndexRoute,
@@ -404,13 +425,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
