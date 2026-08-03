@@ -645,7 +645,7 @@ export function ChatInterface({ notebook }: ChatInterfaceProps) {
 
                 return (
                   <div key={m.id} className="animate-fade-in">
-                    <div className="text-[15px] leading-relaxed text-zinc-100 font-sans prose prose-invert max-w-none prose-p:my-2 prose-headings:mt-4 prose-headings:mb-2 prose-headings:font-semibold prose-h2:text-xl prose-h3:text-base prose-strong:text-white prose-a:text-blue-400 prose-pre:bg-black/50 prose-pre:border prose-pre:border-white/10 prose-code:text-amber-300 prose-code:before:content-none prose-code:after:content-none prose-ul:my-2 prose-ol:my-2 prose-li:my-0.5">
+                    <div className="text-[15px] leading-relaxed text-zinc-100 font-sans prose prose-invert max-w-none prose-p:my-2 prose-headings:mt-4 prose-headings:mb-2 prose-headings:font-semibold prose-h2:text-xl prose-h3:text-base prose-strong:text-white prose-a:text-blue-400 prose-pre:bg-black/50 prose-pre:border prose-pre:border-white/10 prose-code:text-amber-300 prose-code:before:content-none prose-code:after:content-none prose-ul:my-2 prose-ol:my-2 prose-li:my-0.5 [&_u]:font-medium [&_u]:underline [&_u]:decoration-primary [&_u]:decoration-2 [&_u]:underline-offset-4 [&_mark]:rounded [&_mark]:bg-primary/15 [&_mark]:px-1">
                       <ReactMarkdown
                         remarkPlugins={[remarkGfm, remarkMath]}
                         rehypePlugins={[rehypeRaw, rehypeKatex]}
