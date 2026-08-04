@@ -4,8 +4,6 @@ import {
   BookOpen,
   Layers,
   CalendarRange,
-  Flame,
-  Sparkles,
   GraduationCap,
   LayoutDashboard,
   PanelLeftClose,
@@ -14,7 +12,6 @@ import {
   Languages,
 } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
-import { useProfile } from "@/lib/profile-store";
 import { useI18n } from "@/lib/i18n";
 
 type Quadrant = {
@@ -41,7 +38,6 @@ const SIDEBAR_KEY = "trackora:sidebar-open";
 
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const profile = useProfile();
   const { language, toggle: toggleLang, t } = useI18n();
   const [open, setOpen] = useState(true);
 
@@ -105,8 +101,6 @@ export function AppShell({ children }: { children: ReactNode }) {
           </button>
         </div>
 
-        {open && <ProfileBlock streak={profile.streak} xp={profile.xp} />}
-
         <nav className="flex-1 space-y-0.5 px-3 py-4">
           {QUADRANTS.map((q) => {
             const active = isActive(pathname, q.to);
@@ -117,7 +111,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                 key={q.to}
                 to={q.to}
                 title={!open ? label : undefined}
-                className={`group relative flex items-center gap-3 rounded-lg px-3 py-2.5 font-ui text-sm transition ${
+                className={`group relative flex items-center gap-3 rounded-lg px-3 py-2.5 font-ui text-sm transition-all duration-200 ease-out hover:translate-x-0.5 ${
                   active
                     ? "bg-primary/10 text-foreground"
                     : "text-muted-foreground hover:bg-white/[0.04] hover:text-foreground"
@@ -127,7 +121,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                   <span className="absolute left-0 top-1/2 h-6 w-[2px] -translate-y-1/2 rounded-r-full bg-primary shadow-[0_0_10px_var(--primary)]" />
                 )}
                 <Icon
-                  className={`h-4 w-4 shrink-0 ${active ? "text-primary" : ""}`}
+                  className={`h-4 w-4 shrink-0 transition-transform duration-200 group-hover:scale-110 ${active ? "text-primary" : ""}`}
                 />
                 {open && (
                   <span className="truncate text-sm font-medium tracking-tight">
@@ -212,14 +206,16 @@ export function AppShell({ children }: { children: ReactNode }) {
               <Link
                 key={q.to}
                 to={q.to}
-                className={`relative flex flex-1 flex-col items-center justify-center gap-0.5 rounded-[22px] px-1 py-2 font-ui text-[10px] font-semibold transition-all ${
+                className={`relative flex flex-1 flex-col items-center justify-center gap-0.5 rounded-[22px] px-1 py-2 font-ui text-[10px] font-semibold transition-all duration-300 ease-out active:scale-95 ${
                   active
                     ? "bg-primary text-primary-foreground shadow-lg shadow-primary/30"
                     : "text-muted-foreground active:scale-95"
                 }`}
               >
-                <Icon className={`h-[18px] w-[18px] ${active ? "" : ""}`} />
-                <span className="tracking-tight">{t(q.labelKey)}</span>
+                <Icon
+                  className={`h-[18px] w-[18px] transition-transform duration-300 ${active ? "scale-110" : ""}`}
+                />
+                <span className="max-w-full truncate tracking-tight">{t(q.labelKey)}</span>
               </Link>
             );
           })}
@@ -286,52 +282,5 @@ function IconPill({
     >
       <Icon className="h-3.5 w-3.5" />
     </button>
-  );
-}
-
-function StatusPill({
-  icon,
-  label,
-  value,
-}: {
-  icon: ReactNode;
-  label: string;
-  value: string;
-}) {
-  return (
-    <div className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-white/[0.08] bg-white/[0.04] px-3 py-1.5 backdrop-blur">
-      {icon}
-      <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-        {label}
-      </span>
-      <span className="font-ui text-[11px] font-semibold text-foreground tabular-nums">
-        {value}
-      </span>
-    </div>
-  );
-}
-
-function ProfileBlock({ streak, xp }: { streak: number; xp: number }) {
-  return (
-    <div className="mx-3 mt-3 overflow-hidden rounded-xl border border-white/[0.06] bg-card p-3">
-      <div className="grid grid-cols-2 gap-2">
-        <div className="rounded-lg border border-white/[0.05] bg-background/60 p-2.5">
-          <div className="flex items-center gap-1.5 font-ui text-[10px] uppercase tracking-wider text-muted-foreground">
-            <Flame className="h-3 w-3 text-orange-400" /> Streak
-          </div>
-          <div className="mt-1 font-display text-xl leading-none tabular-nums">
-            {streak}
-          </div>
-        </div>
-        <div className="rounded-lg border border-white/[0.05] bg-background/60 p-2.5">
-          <div className="flex items-center gap-1.5 font-ui text-[10px] uppercase tracking-wider text-muted-foreground">
-            <Sparkles className="h-3 w-3 text-primary" /> XP
-          </div>
-          <div className="mt-1 font-display text-xl leading-none tabular-nums">
-            {xp}
-          </div>
-        </div>
-      </div>
-    </div>
   );
 }

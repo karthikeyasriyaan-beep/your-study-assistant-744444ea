@@ -24,6 +24,11 @@ import {
 } from "@/lib/study-sessions-store";
 import { addXP } from "@/lib/profile-store";
 import { setFocusTopic } from "@/lib/focus-topic-store";
+import {
+  SYLLABUS_CHAPTERS,
+  CLASS_KEYS,
+  classLabel,
+} from "@/lib/ts-syllabus";
 
 export const Route = createFileRoute("/management/timer")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -63,39 +68,6 @@ const playBellChime = () => {
   } catch (e) {
     console.warn("Audio blocked:", e);
   }
-};
-
-const SYLLABUS_CHAPTERS: Record<string, Record<string, string[]>> = {
-  "10": {
-    Mathematics: ["Real Numbers", "Polynomials", "Quadratic Equations", "Progressions", "Coordinate Geometry", "Trigonometry", "Probability"],
-    "Physical Science": ["Reflection of Light", "Chemical Equations", "Acids, Bases and Salts", "Refraction at Curved Surfaces", "Human Eye", "Carbon and its Compounds"],
-    "Biological Science": ["Nutrition", "Respiration", "Transportation", "Excretion", "Coordination"],
-    "Social Studies": ["Ideas of Development", "Production and Employment", "India: Relief Features", "Climate of India", "Rivers and Water Resources"],
-  },
-  "9": {
-    Mathematics: ["Real Numbers", "Polynomials", "Geometry", "Linear Equations", "Triangles", "Statistics"],
-    "Physical Science": ["Matter Around Us", "Motion", "Laws of Motion", "Refraction at Plane Surfaces", "Gravitation", "Atoms and Molecules"],
-    "Biological Science": ["Cell Structure", "Plant Tissues", "Animal Tissues", "Diversity in Living Organisms"],
-    "Social Studies": ["Our Earth", "Hydrosphere", "Atmosphere", "Biosphere", "Agriculture"],
-  },
-  "8": {
-    Mathematics: ["Rational Numbers", "Linear Equations", "Quadrilaterals", "Exponents", "Factorisation"],
-    "Physical Science": ["Force", "Friction", "Metals and Non-Metals", "Coal and Petroleum", "Combustion"],
-    "Biological Science": ["Cell Basics", "Microorganisms", "Reproduction in Animals", "Adolescence"],
-    "Social Studies": ["Maps", "Energy from the Sun", "Seasons", "Forests"],
-  },
-  "7": {
-    Mathematics: ["Integers", "Fractions", "Simple Equations", "Lines and Angles", "Triangles", "Data Handling"],
-    "Physical Science": ["Food Components", "Acids and Bases", "Motion and Time", "Heat", "Weather"],
-    "Biological Science": ["Nutrition in Plants", "Respiration", "Transportation", "Reproduction in Plants", "Forests"],
-    "Social Studies": ["Maps", "Rain and Rivers", "Europe", "Africa", "Handicrafts"],
-  },
-  "6": {
-    Mathematics: ["Knowing Our Numbers", "Whole Numbers", "Geometry", "Integers", "Fractions"],
-    "Physical Science": ["Our Food", "Magnets", "Rain", "Materials", "Separation of Substances"],
-    "Biological Science": ["Plants", "Animals", "Habitat", "Water", "Environment"],
-    "Social Studies": ["Earth in Solar System", "Globe", "Maps", "Agriculture"],
-  },
 };
 
 type PresetOption = {
@@ -416,9 +388,9 @@ function FocusTimer() {
                 onChange={(e) => setSelectedClass(e.target.value)}
                 className="w-full rounded-md border bg-background px-2 py-1.5 text-sm"
               >
-                {Object.keys(SYLLABUS_CHAPTERS).map((c) => (
+                {CLASS_KEYS.map((c) => (
                   <option key={c} value={c}>
-                    Class {c}
+                    {classLabel(c)}
                   </option>
                 ))}
               </select>
