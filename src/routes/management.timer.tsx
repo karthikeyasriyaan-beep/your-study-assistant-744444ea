@@ -24,6 +24,11 @@ import {
 } from "@/lib/study-sessions-store";
 import { addXP } from "@/lib/profile-store";
 import { setFocusTopic } from "@/lib/focus-topic-store";
+import {
+  SYLLABUS_CHAPTERS,
+  CLASS_KEYS,
+  classLabel,
+} from "@/lib/ts-syllabus";
 
 export const Route = createFileRoute("/management/timer")({
   validateSearch: (search: Record<string, unknown>) => ({
