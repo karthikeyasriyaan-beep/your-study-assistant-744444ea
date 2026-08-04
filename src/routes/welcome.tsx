@@ -13,6 +13,34 @@ import {
 } from "lucide-react";
 import { measureFps, usePerf } from "@/lib/perf";
 import { MiniAskAI } from "@/components/mini-ask-ai";
+import { SYLLABUS_CHAPTERS, totalChapterCount } from "@/lib/ts-syllabus";
+import { BOOK_VAULT } from "@/lib/materials-data";
+import { CBSE_VAULT } from "@/lib/cbse-data";
+import { INTER_MPC_VAULT } from "@/lib/inter-mpc-data";
+import { INTER_BPC_VAULT } from "@/lib/inter-bipc-data";
+
+/* ---------- real coverage numbers, derived from the app's own data ---------- */
+const CHAPTER_COUNT = totalChapterCount();
+const CLASS_COUNT = Object.keys(SYLLABUS_CHAPTERS).length;
+const SUBJECT_COUNT = new Set(
+  Object.values(SYLLABUS_CHAPTERS).flatMap((s) => Object.keys(s)),
+).size;
+const BOOK_COUNT =
+  BOOK_VAULT.reduce(
+    (n, c) =>
+      n +
+      c.subjects.reduce(
+        (m, sub) => m + sub.boards["Telangana State Board"].length,
+        0,
+      ),
+    0,
+  ) +
+  CBSE_VAULT.reduce(
+    (n, c) => n + c.subjects.reduce((m, sub) => m + sub.books.length, 0),
+    0,
+  ) +
+  INTER_MPC_VAULT.length +
+  INTER_BPC_VAULT.length;
 
 const VISITED_KEY = "stutora:welcomed";
 const MINT = "#5FE3C4";
@@ -154,7 +182,7 @@ function Welcome() {
 
       {/* Top bar */}
       <header
-        className={`mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-5 ${heroClass(0)}`}
+        className={`mx-auto flex w-full max-w-6xl items-center justify-between px-5 py-4 sm:px-6 sm:py-5 ${heroClass(0)}`}
         style={heroStep(0)}
       >
         <div className="flex items-center gap-2">
@@ -174,13 +202,13 @@ function Welcome() {
       </header>
 
       {/* HERO */}
-      <section className="mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-10 px-6 pb-24 pt-8 lg:grid-cols-[1.05fr_1fr] lg:gap-16 lg:pt-14">
+      <section className="mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-10 px-5 pb-16 pt-6 sm:px-6 sm:pb-24 sm:pt-8 lg:grid-cols-[1.05fr_1fr] lg:gap-16 lg:pt-14">
         <div className="text-center lg:text-left">
           <div className={`inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-3 py-1 font-ui text-[10px] uppercase tracking-[0.28em] text-muted-foreground backdrop-blur ${heroClass(1)}`} style={heroStep(1)}>
             Built for Telangana board · Classes 6–Inter
           </div>
 
-          <h1 className="mt-5 font-display text-[40px] font-bold leading-[1.03] tracking-tight sm:text-6xl lg:text-[66px]">
+          <h1 className="mt-5 font-display text-[34px] font-bold leading-[1.05] sm:text-[40px] tracking-tight sm:text-6xl lg:text-[66px]">
             <span className={`block ${heroClass(2)}`} style={heroStep(2)}>
               Your textbook,
             </span>
@@ -303,7 +331,7 @@ function Welcome() {
       <SectionDivider />
 
       {/* WHAT'S INSIDE */}
-      <section className="mx-auto w-full max-w-6xl px-6 py-20 lg:py-24">
+      <section className="mx-auto w-full max-w-6xl px-5 py-14 sm:px-6 sm:py-20 lg:py-24">
         <Reveal className="text-center">
           <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
             Everything exam season needs, one place.
@@ -351,7 +379,7 @@ function Welcome() {
       <SectionDivider />
 
       {/* TRY AI */}
-      <section className="mx-auto w-full max-w-2xl px-6 py-20 lg:py-24">
+      <section className="mx-auto w-full max-w-2xl px-5 py-14 sm:px-6 sm:py-20 lg:py-24">
         <Reveal>
           <div className="mb-2 flex items-center justify-center gap-2 font-ui text-sm font-semibold text-foreground">
             <Sparkles className="h-4 w-4 text-primary" />
@@ -367,7 +395,7 @@ function Welcome() {
       <SectionDivider />
 
       {/* HOW IT WORKS */}
-      <section className="mx-auto w-full max-w-6xl px-6 py-20 lg:py-24">
+      <section className="mx-auto w-full max-w-6xl px-5 py-14 sm:px-6 sm:py-20 lg:py-24">
         <Reveal>
           <div className="rounded-3xl border border-white/[0.08] bg-white/[0.02] p-8 backdrop-blur">
             <div className="text-center">
@@ -390,26 +418,56 @@ function Welcome() {
 
       <SectionDivider />
 
-      {/* COVERAGE STRIP */}
-      <section className="mx-auto w-full max-w-6xl px-6 py-20 lg:py-24">
-        <Reveal>
-          <div className="flex flex-col items-center gap-4 rounded-2xl border border-white/[0.08] bg-white/[0.02] px-6 py-6 text-center sm:flex-row sm:justify-between sm:text-left">
+      {/* COVERAGE — real numbers from the syllabus data in the app */}
+      <section className="mx-auto w-full max-w-6xl px-5 py-14 sm:px-6 sm:py-20 lg:py-24">
+        <Reveal className="text-center">
+          <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-primary">
+            What's already loaded
+          </div>
+          <h2 className="mt-2 font-display text-3xl font-bold tracking-tight sm:text-4xl">
+            Your syllabus is already inside.
+          </h2>
+        </Reveal>
+        <div className="mt-8 grid grid-cols-2 gap-3 lg:grid-cols-4">
+          {[
+            { n: CLASS_COUNT, label: "Class levels", sub: "Class 6 → Inter 2nd year" },
+            { n: SUBJECT_COUNT, label: "Subjects", sub: "Core school + MPC & BiPC" },
+            { n: CHAPTER_COUNT, label: "Chapters", sub: "Selectable in the focus timer" },
+            { n: BOOK_COUNT, label: "Textbooks", sub: "SCERT, NCERT and TSBIE links" },
+          ].map((stat, i) => (
+            <Reveal key={stat.label} delay={i * 80}>
+              <div className="h-full rounded-2xl border border-white/[0.08] bg-white/[0.02] p-4 text-center backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 sm:p-5">
+                <div className="font-display text-3xl font-bold tabular-nums text-foreground sm:text-4xl">
+                  {stat.n}
+                </div>
+                <div className="mt-1 font-ui text-[13px] font-semibold text-foreground/90">
+                  {stat.label}
+                </div>
+                <div className="mt-1 font-ui text-[11px] leading-relaxed text-muted-foreground">
+                  {stat.sub}
+                </div>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+        <Reveal delay={200}>
+          <div className="mt-6 flex flex-col items-center gap-4 rounded-2xl border border-white/[0.08] bg-white/[0.02] px-5 py-5 text-center sm:flex-row sm:justify-between sm:text-left">
             <div className="flex items-center gap-3">
               <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary ring-1 ring-inset ring-primary/20">
                 <GraduationCap className="h-5 w-5" />
               </div>
-              <div>
+              <div className="min-w-0">
                 <div className="font-ui text-sm font-semibold text-foreground">
-                  Classes 6 through Intermediate
+                  Telangana State Board · NCERT · TSBIE Intermediate
                 </div>
                 <div className="font-ui text-xs text-muted-foreground">
-                  Telangana State Board · NCERT aligned
+                  Pick your class and every lesson is already listed.
                 </div>
               </div>
             </div>
             <button
               onClick={enter}
-              className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.1] bg-white/[0.03] px-4 py-2 font-ui text-xs font-medium text-foreground transition hover:bg-white/[0.06]"
+              className="inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-white/[0.1] bg-white/[0.03] px-4 py-2.5 font-ui text-xs font-medium text-foreground transition hover:bg-white/[0.06] active:scale-[0.98] sm:w-auto"
             >
               See your class <ArrowRight className="h-3.5 w-3.5" />
             </button>
@@ -420,7 +478,7 @@ function Welcome() {
       <SectionDivider />
 
       {/* WHY STUTORA */}
-      <section className="mx-auto w-full max-w-4xl px-6 py-20 lg:py-24">
+      <section className="mx-auto w-full max-w-4xl px-5 py-14 sm:px-6 sm:py-20 lg:py-24">
         <Reveal className="text-center">
           <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
             Studying shouldn't feel scattered.
@@ -463,7 +521,7 @@ function Welcome() {
       <SectionDivider />
 
       {/* FAQ */}
-      <section className="mx-auto w-full max-w-3xl px-6 py-20 lg:py-24">
+      <section className="mx-auto w-full max-w-3xl px-5 py-14 sm:px-6 sm:py-20 lg:py-24">
         <Reveal className="text-center">
           <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-primary">
             FAQ
@@ -484,7 +542,7 @@ function Welcome() {
       <SectionDivider />
 
       {/* FINAL CTA */}
-      <section className="mx-auto w-full max-w-3xl px-6 py-24 text-center">
+      <section className="mx-auto w-full max-w-3xl px-5 py-16 text-center sm:px-6 sm:py-24">
         <Reveal>
           <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
             Open your first chapter.
@@ -514,7 +572,7 @@ function Welcome() {
 
 function SectionDivider() {
   return (
-    <div className="mx-auto w-full max-w-6xl px-6">
+    <div className="mx-auto w-full max-w-6xl px-5 sm:px-6">
       <div className="h-px w-full bg-gradient-to-r from-transparent via-white/[0.08] to-transparent" />
     </div>
   );
