@@ -227,7 +227,7 @@ function IconButton({
   open: boolean;
   onClick: () => void;
   label: string;
-  icon: typeof Sun;
+  icon: typeof Languages;
   active?: boolean;
 }) {
   return (
@@ -258,7 +258,7 @@ function IconPill({
   active = false,
 }: {
   onClick: () => void;
-  icon: typeof Sun;
+  icon: typeof Languages;
   label: string;
   active?: boolean;
 }) {
