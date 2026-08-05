@@ -8,7 +8,6 @@ import {
   LayoutDashboard,
   PanelLeftClose,
   PanelLeftOpen,
-  Sun,
   Languages,
 } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
@@ -169,13 +168,6 @@ export function AppShell({ children }: { children: ReactNode }) {
                   active={language === "hindi"}
                   label="Toggle language"
                 />
-                <IconPill
-                  onClick={() => {}}
-                  icon={Sun}
-                  label="Light mode"
-                  active
-                />
-
               </div>
             </div>
           </div>
@@ -235,7 +227,7 @@ function IconButton({
   open: boolean;
   onClick: () => void;
   label: string;
-  icon: typeof Sun;
+  icon: typeof Languages;
   active?: boolean;
 }) {
   return (
@@ -266,7 +258,7 @@ function IconPill({
   active = false,
 }: {
   onClick: () => void;
-  icon: typeof Sun;
+  icon: typeof Languages;
   label: string;
   active?: boolean;
 }) {

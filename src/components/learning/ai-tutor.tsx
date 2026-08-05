@@ -22,6 +22,9 @@ import {
   Menu,
   X as XIcon,
   ImagePlus,
+  Camera,
+  ShieldCheck,
+  Flame,
   Loader2,
   Trash2,
   MessageSquare,
@@ -81,6 +84,7 @@ export function AITutor() {
   const [streamingId, setStreamingId] = useState<string | null>(null);
 
   const fileRef = useRef<HTMLInputElement>(null);
+  const cameraRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -388,6 +392,14 @@ export function AITutor() {
                 onChange={handleImage}
                 className="hidden"
               />
+              <input
+                ref={cameraRef}
+                type="file"
+                accept="image/*"
+                capture="environment"
+                onChange={handleImage}
+                className="hidden"
+              />
               <button
                 type="button"
                 onClick={() => fileRef.current?.click()}
@@ -396,6 +408,16 @@ export function AITutor() {
                 className="grid h-9 w-9 shrink-0 place-items-center rounded-full text-muted-foreground transition hover:bg-white/[0.06] hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 disabled:opacity-40"
               >
                 {extracting ? <Loader2 className="h-4 w-4 animate-spin" /> : <ImagePlus className="h-4 w-4" />}
+              </button>
+              <button
+                type="button"
+                onClick={() => cameraRef.current?.click()}
+                disabled={busy || extracting}
+                aria-label="Take a live photo of your notebook"
+                title="Take a live photo"
+                className="grid h-9 w-9 shrink-0 place-items-center rounded-full text-muted-foreground transition hover:bg-primary/10 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 disabled:opacity-40"
+              >
+                <Camera className="h-4 w-4" />
               </button>
 
               <div className="flex min-w-0 flex-1 flex-col gap-1 pt-1">
@@ -664,6 +686,25 @@ function EmptyState({
       <p className="mt-2 max-w-md font-ui text-sm text-muted-foreground">
         Hi, let's get started — ask any doubt, get full explanations, or ask how to use anything in the app.
       </p>
+      <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-3 py-1.5 font-ui text-xs text-primary">
+        <Flame className="h-3.5 w-3.5" />
+        One question now beats an hour of scrolling. Start small — you'll finish strong.
+      </div>
+      <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
+        {[
+          "Syllabus-aligned answers",
+          "Chats stay on your device",
+          "No ads, no distractions",
+        ].map((t) => (
+          <span
+            key={t}
+            className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.08] bg-white/[0.03] px-3 py-1 font-ui text-[11px] text-muted-foreground"
+          >
+            <ShieldCheck className="h-3 w-3 text-primary" />
+            {t}
+          </span>
+        ))}
+      </div>
       <div className="mt-8 grid w-full max-w-xl grid-cols-1 gap-2 sm:grid-cols-2">
         {suggestions.map((s, i) => (
           <button
