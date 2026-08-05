@@ -84,6 +84,7 @@ export function AITutor() {
   const [streamingId, setStreamingId] = useState<string | null>(null);
 
   const fileRef = useRef<HTMLInputElement>(null);
+  const cameraRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -391,6 +392,14 @@ export function AITutor() {
                 onChange={handleImage}
                 className="hidden"
               />
+              <input
+                ref={cameraRef}
+                type="file"
+                accept="image/*"
+                capture="environment"
+                onChange={handleImage}
+                className="hidden"
+              />
               <button
                 type="button"
                 onClick={() => fileRef.current?.click()}
@@ -399,6 +408,16 @@ export function AITutor() {
                 className="grid h-9 w-9 shrink-0 place-items-center rounded-full text-muted-foreground transition hover:bg-white/[0.06] hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 disabled:opacity-40"
               >
                 {extracting ? <Loader2 className="h-4 w-4 animate-spin" /> : <ImagePlus className="h-4 w-4" />}
+              </button>
+              <button
+                type="button"
+                onClick={() => cameraRef.current?.click()}
+                disabled={busy || extracting}
+                aria-label="Take a live photo of your notebook"
+                title="Take a live photo"
+                className="grid h-9 w-9 shrink-0 place-items-center rounded-full text-muted-foreground transition hover:bg-primary/10 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 disabled:opacity-40"
+              >
+                <Camera className="h-4 w-4" />
               </button>
 
               <div className="flex min-w-0 flex-1 flex-col gap-1 pt-1">
