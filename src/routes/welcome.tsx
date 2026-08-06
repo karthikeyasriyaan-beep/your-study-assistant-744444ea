@@ -545,11 +545,12 @@ function Welcome() {
       {/* FINAL CTA */}
       <section className="mx-auto w-full max-w-3xl px-5 py-16 text-center sm:px-6 sm:py-24">
         <Reveal>
-          <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
-            Open your first chapter.
+          <h2 className="font-display text-3xl tracking-tight sm:text-[42px]">
+            Open one chapter tonight.
           </h2>
-          <p className="mx-auto mt-3 max-w-lg font-ui text-sm text-muted-foreground">
-            No signup needed to explore. Just open it and start.
+          <p className="mx-auto mt-3 max-w-lg font-ui text-[15px] leading-relaxed text-muted-foreground">
+            No signup, no setup. Pick a subject and the next twenty minutes
+            take care of themselves.
           </p>
           <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <button
@@ -565,6 +566,21 @@ function Welcome() {
           </div>
         </Reveal>
       </section>
+
+      {/* FOOTER */}
+      <footer className="mx-auto w-full max-w-6xl px-5 pb-10 sm:px-6">
+        <div className="flex flex-col items-center justify-between gap-3 border-t border-white/[0.06] pt-6 sm:flex-row">
+          <span className="font-ui text-[11px] text-muted-foreground">
+            © {new Date().getFullYear()} Stutora · Built for students, not advertisers.
+          </span>
+          <Link
+            to="/privacy"
+            className="font-ui text-[11px] text-muted-foreground underline-offset-4 transition hover:text-foreground hover:underline"
+          >
+            Privacy & Data Trust
+          </Link>
+        </div>
+      </footer>
 
       {askLite && <PerfDialog onChoose={choose} />}
     </div>
