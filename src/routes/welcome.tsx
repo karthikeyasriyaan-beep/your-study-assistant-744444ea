@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import {
   ArrowRight,
@@ -48,16 +48,16 @@ const MINT = "#5FE3C4";
 export const Route = createFileRoute("/welcome")({
   head: () => ({
     meta: [
-      { title: "Stutora — Study smarter, not scattered" },
+      { title: "Stutora — Study like it finally makes sense" },
       {
         name: "description",
         content:
-          "Stutora brings your Telangana board and NCERT chapters, an AI tutor that explains in the margin, practice questions, and a focus timer into one calm space built for exam season.",
+          "Your chapters, an AI tutor that explains them line by line, quick practice and a focus timer — one calm space built for Telangana board and NCERT students.",
       },
-      { property: "og:title", content: "Stutora — Study smarter, not scattered" },
+      { property: "og:title", content: "Stutora — Study like it finally makes sense" },
       {
         property: "og:description",
-        content: "One tab. Every doubt, answered — right where you're reading.",
+        content: "One quiet tab. Every doubt answered where you're reading.",
       },
     ],
     scripts: [
@@ -204,29 +204,30 @@ function Welcome() {
       {/* HERO */}
       <section className="mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-10 px-5 pb-16 pt-6 sm:px-6 sm:pb-24 sm:pt-8 lg:grid-cols-[1.05fr_1fr] lg:gap-16 lg:pt-14">
         <div className="text-center lg:text-left">
-          <div className={`inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-3 py-1 font-ui text-[10px] uppercase tracking-[0.28em] text-muted-foreground backdrop-blur ${heroClass(1)}`} style={heroStep(1)}>
-            Built for Telangana board · Classes 6–Inter
+          <div className={`inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-3.5 py-1.5 font-ui text-[11px] font-medium tracking-tight text-muted-foreground backdrop-blur ${heroClass(1)}`} style={heroStep(1)}>
+            <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+            Telangana board · NCERT · Classes 6 to Inter
           </div>
 
-          <h1 className="mt-5 font-display text-[34px] font-bold leading-[1.05] sm:text-[40px] tracking-tight sm:text-6xl lg:text-[66px]">
+          <h1 className="mt-6 font-display text-[38px] font-semibold leading-[1.02] tracking-[-0.035em] sm:text-[56px] lg:text-[70px]">
             <span className={`block ${heroClass(2)}`} style={heroStep(2)}>
-              Your textbook,
+              Study like it
             </span>
-            <span className={`block italic font-semibold text-muted-foreground/70 ${heroClass(3)}`} style={heroStep(3)}>
-              with an AI
+            <span className={`block text-muted-foreground/60 ${heroClass(3)}`} style={heroStep(3)}>
+              finally makes
             </span>
             <span className={`block ${heroClass(4)}`} style={heroStep(4)}>
-              in the margins.
+              sense.
             </span>
           </h1>
 
           <p
-            className={`mx-auto mt-5 max-w-md font-ui text-[15px] leading-relaxed text-muted-foreground lg:mx-0 ${heroClass(5)}`}
+            className={`mx-auto mt-6 max-w-md font-ui text-[16px] leading-[1.65] tracking-[-0.01em] text-muted-foreground lg:mx-0 ${heroClass(5)}`}
             style={heroStep(5)}
           >
-            Stop switching between five tabs to understand one line. Stutora
-            reads your chapter with you, explains the confusing part right
-            there, and tracks the time you actually spend studying.
+            One quiet place for your chapters, your doubts and your hours.
+            Stutora reads along with you, explains the line you're stuck on,
+            and quietly keeps score of the time you actually put in.
           </p>
 
           <div
@@ -241,7 +242,7 @@ function Welcome() {
                 aria-hidden
                 className="absolute inset-0 -translate-x-full bg-white/20 transition-transform duration-700 group-hover:translate-x-full"
               />
-              <span className="relative">Start studying free</span>
+              <span className="relative">Start studying — it's free</span>
               <ArrowRight className="relative h-4 w-4 transition group-hover:translate-x-0.5" />
             </button>
             <button
@@ -256,7 +257,7 @@ function Welcome() {
             className={`mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 font-ui text-xs text-muted-foreground lg:justify-start ${heroClass(7)}`}
             style={heroStep(7)}
           >
-            {["Free forever", "No signup needed", "NCERT + state board"].map((t) => (
+            {["Free forever", "No signup", "Your data stays on your device"].map((t) => (
               <li key={t} className="inline-flex items-center gap-1.5">
                 <span className="grid h-4 w-4 place-items-center rounded-full border border-primary/40 text-primary">
                   <Check className="h-2.5 w-2.5" />
@@ -544,11 +545,12 @@ function Welcome() {
       {/* FINAL CTA */}
       <section className="mx-auto w-full max-w-3xl px-5 py-16 text-center sm:px-6 sm:py-24">
         <Reveal>
-          <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
-            Open your first chapter.
+          <h2 className="font-display text-3xl tracking-tight sm:text-[42px]">
+            Open one chapter tonight.
           </h2>
-          <p className="mx-auto mt-3 max-w-lg font-ui text-sm text-muted-foreground">
-            No signup needed to explore. Just open it and start.
+          <p className="mx-auto mt-3 max-w-lg font-ui text-[15px] leading-relaxed text-muted-foreground">
+            No signup, no setup. Pick a subject and the next twenty minutes
+            take care of themselves.
           </p>
           <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <button
@@ -564,6 +566,21 @@ function Welcome() {
           </div>
         </Reveal>
       </section>
+
+      {/* FOOTER */}
+      <footer className="mx-auto w-full max-w-6xl px-5 pb-10 sm:px-6">
+        <div className="flex flex-col items-center justify-between gap-3 border-t border-white/[0.06] pt-6 sm:flex-row">
+          <span className="font-ui text-[11px] text-muted-foreground">
+            © {new Date().getFullYear()} Stutora · Built for students, not advertisers.
+          </span>
+          <Link
+            to="/privacy"
+            className="font-ui text-[11px] text-muted-foreground underline-offset-4 transition hover:text-foreground hover:underline"
+          >
+            Privacy & Data Trust
+          </Link>
+        </div>
+      </footer>
 
       {askLite && <PerfDialog onChoose={choose} />}
     </div>

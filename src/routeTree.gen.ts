@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WelcomeRouteImport } from './routes/welcome'
 import { Route as ProductivityRouteImport } from './routes/productivity'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as MaterialsRouteImport } from './routes/materials'
 import { Route as ManagementRouteImport } from './routes/management'
 import { Route as DashboardRouteImport } from './routes/dashboard'
@@ -35,6 +36,11 @@ const WelcomeRoute = WelcomeRouteImport.update({
 const ProductivityRoute = ProductivityRouteImport.update({
   id: '/productivity',
   path: '/productivity',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MaterialsRoute = MaterialsRouteImport.update({
@@ -118,6 +124,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/management': typeof ManagementRouteWithChildren
   '/materials': typeof MaterialsRouteWithChildren
+  '/privacy': typeof PrivacyRoute
   '/productivity': typeof ProductivityRouteWithChildren
   '/welcome': typeof WelcomeRoute
   '/api/chat': typeof ApiChatRoute
@@ -136,6 +143,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
   '/management': typeof ManagementRouteWithChildren
+  '/privacy': typeof PrivacyRoute
   '/productivity': typeof ProductivityRouteWithChildren
   '/welcome': typeof WelcomeRoute
   '/api/chat': typeof ApiChatRoute
@@ -156,6 +164,7 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/management': typeof ManagementRouteWithChildren
   '/materials': typeof MaterialsRouteWithChildren
+  '/privacy': typeof PrivacyRoute
   '/productivity': typeof ProductivityRouteWithChildren
   '/welcome': typeof WelcomeRoute
   '/api/chat': typeof ApiChatRoute
@@ -177,6 +186,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/management'
     | '/materials'
+    | '/privacy'
     | '/productivity'
     | '/welcome'
     | '/api/chat'
@@ -195,6 +205,7 @@ export interface FileRouteTypes {
     | '/'
     | '/dashboard'
     | '/management'
+    | '/privacy'
     | '/productivity'
     | '/welcome'
     | '/api/chat'
@@ -214,6 +225,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/management'
     | '/materials'
+    | '/privacy'
     | '/productivity'
     | '/welcome'
     | '/api/chat'
@@ -234,6 +246,7 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   ManagementRoute: typeof ManagementRouteWithChildren
   MaterialsRoute: typeof MaterialsRouteWithChildren
+  PrivacyRoute: typeof PrivacyRoute
   ProductivityRoute: typeof ProductivityRouteWithChildren
   WelcomeRoute: typeof WelcomeRoute
   ApiChatRoute: typeof ApiChatRoute
@@ -253,6 +266,13 @@ declare module '@tanstack/react-router' {
       path: '/productivity'
       fullPath: '/productivity'
       preLoaderRoute: typeof ProductivityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/materials': {
@@ -418,6 +438,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   ManagementRoute: ManagementRouteWithChildren,
   MaterialsRoute: MaterialsRouteWithChildren,
+  PrivacyRoute: PrivacyRoute,
   ProductivityRoute: ProductivityRouteWithChildren,
   WelcomeRoute: WelcomeRoute,
   ApiChatRoute: ApiChatRoute,
@@ -425,13 +446,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
