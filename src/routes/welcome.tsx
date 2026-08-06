@@ -48,16 +48,16 @@ const MINT = "#5FE3C4";
 export const Route = createFileRoute("/welcome")({
   head: () => ({
     meta: [
-      { title: "Stutora — Study smarter, not scattered" },
+      { title: "Stutora — Study like it finally makes sense" },
       {
         name: "description",
         content:
-          "Stutora brings your Telangana board and NCERT chapters, an AI tutor that explains in the margin, practice questions, and a focus timer into one calm space built for exam season.",
+          "Your chapters, an AI tutor that explains them line by line, quick practice and a focus timer — one calm space built for Telangana board and NCERT students.",
       },
-      { property: "og:title", content: "Stutora — Study smarter, not scattered" },
+      { property: "og:title", content: "Stutora — Study like it finally makes sense" },
       {
         property: "og:description",
-        content: "One tab. Every doubt, answered — right where you're reading.",
+        content: "One quiet tab. Every doubt answered where you're reading.",
       },
     ],
     scripts: [
