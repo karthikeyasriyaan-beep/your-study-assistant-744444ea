@@ -25,7 +25,7 @@ const STEPS: Step[] = [
   {
     icon: Sparkles,
     tag: "Welcome",
-    title: "Meet Trackora",
+    title: "Meet Stutora",
     body: "Your calm study OS — AI tutor, textbooks, flashcards, quizzes and a focus timer, all in one place.",
     accent: "from-primary/40 to-primary/10",
   },

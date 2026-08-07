@@ -84,14 +84,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Trackora Study — 4-Quadrant Learning OS" },
+      { title: "Stutora Study — 4-Quadrant Learning OS" },
       {
         name: "description",
         content:
-          "Trackora Study unifies notebook AI, NCERT materials, spaced-repetition practice and focus timers in one student dashboard.",
+          "Stutora Study unifies notebook AI, NCERT materials, spaced-repetition practice and focus timers in one student dashboard.",
       },
-      { name: "author", content: "Trackora" },
-      { property: "og:title", content: "Trackora Study" },
+      { name: "author", content: "Stutora" },
+      { property: "og:title", content: "Stutora Study" },
       {
         property: "og:description",
         content:

@@ -729,7 +729,7 @@ export function ChatInterface({ notebook }: ChatInterfaceProps) {
               placeholder={
                 isTestLocked
                   ? t("tutor.placeholder.locked")
-                  : "Ask Trackora"
+                  : "Ask Stutora"
               }
               disabled={busy || isTestLocked}
               className="bg-transparent border-none text-sm text-white focus-visible:ring-0 shadow-none px-2 flex-1 h-10 placeholder-zinc-500 font-sans"
