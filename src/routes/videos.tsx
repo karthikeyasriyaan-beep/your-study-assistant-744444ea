@@ -104,14 +104,18 @@ function VideosPage() {
 
       <div className="space-y-6">
         {cls.subjects.map((subject) => (
-          <section key={subject}>
+          <section key={subject.label}>
             <div className="mb-2 flex flex-wrap items-center gap-2">
               <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-                {subject}
+                {subject.label}
               </h2>
               <Link
                 to="/management/timer"
-                search={{ class: cls.syllabusKey, subject, chapter: undefined }}
+                search={{
+                  class: cls.syllabusKey,
+                  subject: subject.syllabusSubject,
+                  chapter: undefined,
+                }}
                 className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
               >
                 <Timer className="h-3 w-3" /> Study this with a timer
@@ -121,7 +125,7 @@ function VideosPage() {
               {CHANNELS.map((ch) => (
                 <a
                   key={ch.id}
-                  href={videoSearchUrl(ch, cls.name, subject)}
+                  href={videoSearchUrl(ch, cls.name, subject.label)}
                   target="_blank"
                   rel="noreferrer"
                   className="card-lift group flex items-start gap-3 rounded-xl border bg-card p-4 transition hover:border-primary/40"
@@ -132,7 +136,7 @@ function VideosPage() {
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
                       <h3 className="truncate text-sm font-semibold">
-                        {ch.name} · {subject}
+                        {ch.name} · {subject.label}
                       </h3>
                       <ExternalLink className="h-3 w-3 shrink-0 text-muted-foreground" />
                     </div>
