@@ -9,6 +9,7 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   Languages,
+  Youtube,
 } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import { useI18n } from "@/lib/i18n";
@@ -24,6 +25,7 @@ export const QUADRANTS: Quadrant[] = [
   { to: "/dashboard", labelKey: "nav.home", descKey: "nav.home.desc", icon: LayoutDashboard },
   { to: "/", labelKey: "nav.tutor", descKey: "nav.tutor.desc", icon: Brain },
   { to: "/materials", labelKey: "nav.books", descKey: "nav.books.desc", icon: BookOpen },
+  { to: "/videos", labelKey: "nav.videos", descKey: "nav.videos.desc", icon: Youtube },
   { to: "/productivity", labelKey: "nav.practice", descKey: "nav.practice.desc", icon: Layers },
   { to: "/management", labelKey: "nav.focus", descKey: "nav.focus.desc", icon: CalendarRange },
 ];
