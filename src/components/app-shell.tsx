@@ -83,7 +83,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           {open && (
             <div className="min-w-0 flex-1">
               <div className="truncate font-display text-lg leading-none">
-                Trackora
+                Stutora
               </div>
             </div>
           )}
@@ -155,7 +155,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               </div>
               <div className="min-w-0 flex-1 leading-tight">
                 <div className="truncate font-display text-[15px]">
-                  {activeQuad ? t(activeQuad.labelKey) : "Trackora"}
+                  {activeQuad ? t(activeQuad.labelKey) : "Stutora"}
                 </div>
                 <div className="truncate font-ui text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
                   {activeQuad ? t(activeQuad.descKey) : "Study OS"}

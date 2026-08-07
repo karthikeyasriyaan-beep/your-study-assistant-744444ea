@@ -35,13 +35,13 @@ export const Route = createFileRoute("/dashboard")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Home — Trackora" },
+      { title: "Home — Stutora" },
       {
         name: "description",
         content:
           "Your daily study home — active focus topic, endurance timer, tutor and analytics in one glance.",
       },
-      { property: "og:title", content: "Home — Trackora" },
+      { property: "og:title", content: "Home — Stutora" },
       {
         property: "og:description",
         content:
