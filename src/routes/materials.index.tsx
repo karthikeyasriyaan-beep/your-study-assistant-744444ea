@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { BookOpen, ChevronRight, ExternalLink, GraduationCap, Tag } from "lucide-react";
+import { BookOpen, ChevronRight, ExternalLink, GraduationCap, Tag, Youtube } from "lucide-react";
 import {
   BOOK_VAULT,
   SCERT_TELANGANA_PORTAL,
@@ -94,6 +94,44 @@ function MaterialsIndex() {
               </div>
               <p className="mt-0.5 text-xs text-muted-foreground">
                 Botany · Zoology · Physics · Chemistry · EN & TE
+              </p>
+            </div>
+          </Link>
+          <Link
+            to="/materials/ap"
+            className="flex items-center gap-3 rounded-xl border border-amber-500/40 bg-amber-500/5 p-4 transition hover:border-amber-500 hover:shadow-sm"
+          >
+            <div className="shrink-0 rounded-lg bg-amber-500/15 p-2 text-amber-600 dark:text-amber-400">
+              <GraduationCap className="h-5 w-5" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2">
+                <h3 className="truncate text-sm font-semibold">
+                  AP State Syllabus (SCERT)
+                </h3>
+                <ChevronRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+              </div>
+              <p className="mt-0.5 text-xs text-muted-foreground">
+                Class 6–10 · Maths · Sciences · Social · EN &amp; TE medium
+              </p>
+            </div>
+          </Link>
+          <Link
+            to="/videos"
+            className="flex items-center gap-3 rounded-xl border border-rose-500/40 bg-rose-500/5 p-4 transition hover:border-rose-500 hover:shadow-sm"
+          >
+            <div className="shrink-0 rounded-lg bg-rose-500/15 p-2 text-rose-600 dark:text-rose-400">
+              <Youtube className="h-5 w-5" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2">
+                <h3 className="truncate text-sm font-semibold">
+                  Video Lessons — Class 6–9
+                </h3>
+                <ChevronRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+              </div>
+              <p className="mt-0.5 text-xs text-muted-foreground">
+                Vedantu &amp; Physics Wallah lectures, subject by subject
               </p>
             </div>
           </Link>

@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WelcomeRouteImport } from './routes/welcome'
+import { Route as VideosRouteImport } from './routes/videos'
 import { Route as ProductivityRouteImport } from './routes/productivity'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as MaterialsRouteImport } from './routes/materials'
@@ -22,6 +23,7 @@ import { Route as ProductivityFlashcardsRouteImport } from './routes/productivit
 import { Route as MaterialsInterMpcRouteImport } from './routes/materials.inter-mpc'
 import { Route as MaterialsInterBipcRouteImport } from './routes/materials.inter-bipc'
 import { Route as MaterialsCbseRouteImport } from './routes/materials.cbse'
+import { Route as MaterialsApRouteImport } from './routes/materials.ap'
 import { Route as MaterialsChapterIdRouteImport } from './routes/materials.$chapterId'
 import { Route as ManagementTimerRouteImport } from './routes/management.timer'
 import { Route as ManagementPlannerRouteImport } from './routes/management.planner'
@@ -31,6 +33,11 @@ import { Route as ApiChatRouteImport } from './routes/api/chat'
 const WelcomeRoute = WelcomeRouteImport.update({
   id: '/welcome',
   path: '/welcome',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VideosRoute = VideosRouteImport.update({
+  id: '/videos',
+  path: '/videos',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProductivityRoute = ProductivityRouteImport.update({
@@ -93,6 +100,11 @@ const MaterialsCbseRoute = MaterialsCbseRouteImport.update({
   path: '/cbse',
   getParentRoute: () => MaterialsRoute,
 } as any)
+const MaterialsApRoute = MaterialsApRouteImport.update({
+  id: '/ap',
+  path: '/ap',
+  getParentRoute: () => MaterialsRoute,
+} as any)
 const MaterialsChapterIdRoute = MaterialsChapterIdRouteImport.update({
   id: '/$chapterId',
   path: '/$chapterId',
@@ -126,12 +138,14 @@ export interface FileRoutesByFullPath {
   '/materials': typeof MaterialsRouteWithChildren
   '/privacy': typeof PrivacyRoute
   '/productivity': typeof ProductivityRouteWithChildren
+  '/videos': typeof VideosRoute
   '/welcome': typeof WelcomeRoute
   '/api/chat': typeof ApiChatRoute
   '/management/analytics': typeof ManagementAnalyticsRoute
   '/management/planner': typeof ManagementPlannerRoute
   '/management/timer': typeof ManagementTimerRoute
   '/materials/$chapterId': typeof MaterialsChapterIdRoute
+  '/materials/ap': typeof MaterialsApRoute
   '/materials/cbse': typeof MaterialsCbseRoute
   '/materials/inter-bipc': typeof MaterialsInterBipcRoute
   '/materials/inter-mpc': typeof MaterialsInterMpcRoute
@@ -145,12 +159,14 @@ export interface FileRoutesByTo {
   '/management': typeof ManagementRouteWithChildren
   '/privacy': typeof PrivacyRoute
   '/productivity': typeof ProductivityRouteWithChildren
+  '/videos': typeof VideosRoute
   '/welcome': typeof WelcomeRoute
   '/api/chat': typeof ApiChatRoute
   '/management/analytics': typeof ManagementAnalyticsRoute
   '/management/planner': typeof ManagementPlannerRoute
   '/management/timer': typeof ManagementTimerRoute
   '/materials/$chapterId': typeof MaterialsChapterIdRoute
+  '/materials/ap': typeof MaterialsApRoute
   '/materials/cbse': typeof MaterialsCbseRoute
   '/materials/inter-bipc': typeof MaterialsInterBipcRoute
   '/materials/inter-mpc': typeof MaterialsInterMpcRoute
@@ -166,12 +182,14 @@ export interface FileRoutesById {
   '/materials': typeof MaterialsRouteWithChildren
   '/privacy': typeof PrivacyRoute
   '/productivity': typeof ProductivityRouteWithChildren
+  '/videos': typeof VideosRoute
   '/welcome': typeof WelcomeRoute
   '/api/chat': typeof ApiChatRoute
   '/management/analytics': typeof ManagementAnalyticsRoute
   '/management/planner': typeof ManagementPlannerRoute
   '/management/timer': typeof ManagementTimerRoute
   '/materials/$chapterId': typeof MaterialsChapterIdRoute
+  '/materials/ap': typeof MaterialsApRoute
   '/materials/cbse': typeof MaterialsCbseRoute
   '/materials/inter-bipc': typeof MaterialsInterBipcRoute
   '/materials/inter-mpc': typeof MaterialsInterMpcRoute
@@ -188,12 +206,14 @@ export interface FileRouteTypes {
     | '/materials'
     | '/privacy'
     | '/productivity'
+    | '/videos'
     | '/welcome'
     | '/api/chat'
     | '/management/analytics'
     | '/management/planner'
     | '/management/timer'
     | '/materials/$chapterId'
+    | '/materials/ap'
     | '/materials/cbse'
     | '/materials/inter-bipc'
     | '/materials/inter-mpc'
@@ -207,12 +227,14 @@ export interface FileRouteTypes {
     | '/management'
     | '/privacy'
     | '/productivity'
+    | '/videos'
     | '/welcome'
     | '/api/chat'
     | '/management/analytics'
     | '/management/planner'
     | '/management/timer'
     | '/materials/$chapterId'
+    | '/materials/ap'
     | '/materials/cbse'
     | '/materials/inter-bipc'
     | '/materials/inter-mpc'
@@ -227,12 +249,14 @@ export interface FileRouteTypes {
     | '/materials'
     | '/privacy'
     | '/productivity'
+    | '/videos'
     | '/welcome'
     | '/api/chat'
     | '/management/analytics'
     | '/management/planner'
     | '/management/timer'
     | '/materials/$chapterId'
+    | '/materials/ap'
     | '/materials/cbse'
     | '/materials/inter-bipc'
     | '/materials/inter-mpc'
@@ -248,6 +272,7 @@ export interface RootRouteChildren {
   MaterialsRoute: typeof MaterialsRouteWithChildren
   PrivacyRoute: typeof PrivacyRoute
   ProductivityRoute: typeof ProductivityRouteWithChildren
+  VideosRoute: typeof VideosRoute
   WelcomeRoute: typeof WelcomeRoute
   ApiChatRoute: typeof ApiChatRoute
 }
@@ -259,6 +284,13 @@ declare module '@tanstack/react-router' {
       path: '/welcome'
       fullPath: '/welcome'
       preLoaderRoute: typeof WelcomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/videos': {
+      id: '/videos'
+      path: '/videos'
+      fullPath: '/videos'
+      preLoaderRoute: typeof VideosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/productivity': {
@@ -345,6 +377,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MaterialsCbseRouteImport
       parentRoute: typeof MaterialsRoute
     }
+    '/materials/ap': {
+      id: '/materials/ap'
+      path: '/ap'
+      fullPath: '/materials/ap'
+      preLoaderRoute: typeof MaterialsApRouteImport
+      parentRoute: typeof MaterialsRoute
+    }
     '/materials/$chapterId': {
       id: '/materials/$chapterId'
       path: '/$chapterId'
@@ -401,6 +440,7 @@ const ManagementRouteWithChildren = ManagementRoute._addFileChildren(
 
 interface MaterialsRouteChildren {
   MaterialsChapterIdRoute: typeof MaterialsChapterIdRoute
+  MaterialsApRoute: typeof MaterialsApRoute
   MaterialsCbseRoute: typeof MaterialsCbseRoute
   MaterialsInterBipcRoute: typeof MaterialsInterBipcRoute
   MaterialsInterMpcRoute: typeof MaterialsInterMpcRoute
@@ -409,6 +449,7 @@ interface MaterialsRouteChildren {
 
 const MaterialsRouteChildren: MaterialsRouteChildren = {
   MaterialsChapterIdRoute: MaterialsChapterIdRoute,
+  MaterialsApRoute: MaterialsApRoute,
   MaterialsCbseRoute: MaterialsCbseRoute,
   MaterialsInterBipcRoute: MaterialsInterBipcRoute,
   MaterialsInterMpcRoute: MaterialsInterMpcRoute,
@@ -440,19 +481,10 @@ const rootRouteChildren: RootRouteChildren = {
   MaterialsRoute: MaterialsRouteWithChildren,
   PrivacyRoute: PrivacyRoute,
   ProductivityRoute: ProductivityRouteWithChildren,
+  VideosRoute: VideosRoute,
   WelcomeRoute: WelcomeRoute,
   ApiChatRoute: ApiChatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

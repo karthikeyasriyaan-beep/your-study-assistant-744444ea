@@ -348,8 +348,13 @@ function interSubjects(year: "1st Year" | "2nd Year"): Record<string, string[]> 
   return out;
 }
 
+const AP_SCHOOL: SyllabusMap = Object.fromEntries(
+  Object.entries(SCHOOL).map(([cls, subjects]) => [`AP Class ${cls}`, subjects]),
+);
+
 export const SYLLABUS_CHAPTERS: SyllabusMap = {
   ...SCHOOL,
+  ...AP_SCHOOL,
   "Inter 1st Year": interSubjects("1st Year"),
   "Inter 2nd Year": interSubjects("2nd Year"),
 };
