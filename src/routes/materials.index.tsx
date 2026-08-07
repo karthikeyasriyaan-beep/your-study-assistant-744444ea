@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { BookOpen, ChevronRight, ExternalLink, GraduationCap, Tag } from "lucide-react";
+import { BookOpen, ChevronRight, ExternalLink, GraduationCap, Tag, Youtube } from "lucide-react";
 import {
   BOOK_VAULT,
   SCERT_TELANGANA_PORTAL,
