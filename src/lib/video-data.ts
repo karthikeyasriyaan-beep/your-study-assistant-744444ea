@@ -29,6 +29,23 @@ export interface VideoClass {
   subjects: VideoSubject[];
 }
 
+export const VIDEO_CHANNELS: Record<VideoChannel["id"], VideoChannel> = {
+  vedantu: {
+    id: "vedantu",
+    name: "Vedantu",
+    blurb: "Concept-first lessons with worked board-style examples.",
+    channelUrl: "https://www.youtube.com/@VedantuClass910",
+    scope: "Vedantu",
+  },
+  "physics-wallah": {
+    id: "physics-wallah",
+    name: "Physics Wallah",
+    blurb: "Full chapter lectures from the PW Foundation batches.",
+    channelUrl: "https://www.youtube.com/@PhysicsWallahFoundation",
+    scope: "Physics Wallah Foundation",
+  },
+};
+
 const SUBJECTS: VideoSubject[] = [
   { label: "Mathematics", syllabusSubject: "Mathematics" },
   { label: "Physics & Chemistry", syllabusSubject: "Physical Science" },
