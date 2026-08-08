@@ -1,8 +1,8 @@
 // Curated YouTube lecture library — Classes 6 to 9.
 // Only two trusted teaching channels are used: Vedantu and Physics Wallah.
-// Every card opens a channel-scoped YouTube search for that exact class +
-// subject, so the links keep working even when a channel re-uploads or
-// renames a playlist (hard-coded playlist IDs rot; searches don't).
+// Cards open the channel's own page (youtube.com/@handle/search?query=...),
+// so every link lands directly on that channel's videos instead of a
+// generic site-wide search.
 
 export interface VideoChannel {
   id: "vedantu" | "physics-wallah";
@@ -10,8 +10,8 @@ export interface VideoChannel {
   blurb: string;
   /** channel home page */
   channelUrl: string;
-  /** words added to every search so results stay on this channel */
-  scope: string;
+  /** channel handle, e.g. @VedantuClass910 */
+  handle: string;
 }
 
 export interface VideoSubject {
@@ -35,14 +35,14 @@ export const VIDEO_CHANNELS: Record<VideoChannel["id"], VideoChannel> = {
     name: "Vedantu",
     blurb: "Concept-first lessons with worked board-style examples.",
     channelUrl: "https://www.youtube.com/@VedantuClass910",
-    scope: "Vedantu",
+    handle: "@VedantuClass910",
   },
   "physics-wallah": {
     id: "physics-wallah",
     name: "Physics Wallah",
     blurb: "Full chapter lectures from the PW Foundation batches.",
     channelUrl: "https://www.youtube.com/@PhysicsWallahFoundation",
-    scope: "Physics Wallah Foundation",
+    handle: "@PhysicsWallahFoundation",
   },
 };
 
@@ -66,12 +66,17 @@ export function videoSearchUrl(
   className: string,
   subject: string,
 ) {
-  const q = `${channel.scope} ${className} ${subject} full chapter`;
-  return `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`;
+  const q = `${className} ${subject}`;
+  // channel-scoped search: stays inside the channel's own page
+  return `${channel.channelUrl}/search?query=${encodeURIComponent(q)}`;
 }
 
 export function channelPlaylistsUrl(channel: VideoChannel) {
   return `${channel.channelUrl}/playlists`;
+}
+
+export function channelVideosUrl(channel: VideoChannel) {
+  return `${channel.channelUrl}/videos`;
 }
 
 export function totalVideoTracks() {
