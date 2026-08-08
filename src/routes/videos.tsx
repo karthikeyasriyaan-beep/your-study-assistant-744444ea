@@ -5,6 +5,7 @@ import {
   VIDEO_CHANNELS,
   VIDEO_CLASSES,
   channelPlaylistsUrl,
+  channelVideosUrl,
   videoSearchUrl,
   type VideoChannel,
 } from "@/lib/video-data";
@@ -81,6 +82,31 @@ function VideosPage() {
                 <ExternalLink className="h-3 w-3 shrink-0 text-muted-foreground" />
               </div>
               <p className="mt-0.5 text-xs text-muted-foreground">{ch.blurb}</p>
+              <div className="mt-2 flex flex-wrap gap-3 text-xs">
+                <span
+                  role="link"
+                  tabIndex={0}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.open(ch.channelUrl, "_blank", "noreferrer");
+                  }}
+                  className="text-primary hover:underline"
+                >
+                  Channel home
+                </span>
+                <span
+                  role="link"
+                  tabIndex={0}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.open(channelVideosUrl(ch), "_blank", "noreferrer");
+                  }}
+                  className="text-primary hover:underline"
+                >
+                  All videos
+                </span>
+                <span className="text-muted-foreground">{ch.handle}</span>
+              </div>
             </div>
           </a>
         ))}
@@ -145,7 +171,7 @@ function VideosPage() {
                         {cls.name}
                       </Badge>
                       <Badge variant="secondary" className="text-[10px]">
-                        Full chapter lectures
+                        On {ch.handle}
                       </Badge>
                     </div>
                   </div>
